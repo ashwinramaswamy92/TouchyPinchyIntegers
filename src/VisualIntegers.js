@@ -56,7 +56,7 @@ class VisualIntegers {
   incrementPositive() {
     //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentPositiveUnits, we could transition into this state via an animation.
 
-    //Animation part: animates appearance of a single block:
+    //Animation part: animates appearance of a single block by increasing its alpha:
         let startXY = [width/2 - this.blockSize[0], height/2 - this.blockSize[1]];
         this.newBlockAlpha += 25;
         stroke(0, this.newBlockAlpha);
@@ -78,7 +78,7 @@ class VisualIntegers {
 
   incrementNegative() {    //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentNegativeUnits, we could transition into this state via an animation.
 
-    //Animation part: animates appearance of a single block:
+    //Animation part: animates appearance of a single block by increasing its alpha:
         let startXY = [width/2 - this.blockSize[0], height/2];
         this.newBlockAlpha += 25;
         stroke(0, this.newBlockAlpha);
