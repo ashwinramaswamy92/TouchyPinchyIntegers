@@ -27,21 +27,21 @@ function cleanSameObjects(currentObject, lastObject) {
 
 function touchStarted() {
 
-  if (objectList.length >= 10) {
+  if (objectList.length >= 2) {
     return;
   }
 
   let n = touches.length;
 
-  //touch to select then drag finger to move object
-  for (let i = 0; i < objectList.length; i++) {
-    let object = objectList[i];
-    object.tryDrag(mouseX, mouseY);
-    if (currentlyAnimating.DRAGGING == true) {
-      dragObject = object;
-      break;
-    }
-  }
+  // //touch to select then drag finger to move object
+  // for (let i = 0; i < objectList.length; i++) {
+  //   let object = objectList[i];
+  //   object.tryDrag(mouseX, mouseY);
+  //   if (currentlyAnimating.DRAGGING == true) {
+  //     dragObject = object;
+  //     break;
+  //   }
+  // }
 
   //creating object by tapping n fingers above or below line
   if (!currentlyAnimating.DRAGGING) {

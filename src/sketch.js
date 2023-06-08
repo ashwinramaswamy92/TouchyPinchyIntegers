@@ -11,6 +11,7 @@ let currentObjectIndex = -1;
 let objectList = [];
 let lastTouchTime = 0;
 let dragObject = null;
+let towerPair = new VisualIntegers();
 
 function setup() {
   createCanvas(800, 600);
@@ -18,10 +19,35 @@ function setup() {
   
   //Listening for touch events and preventing the default behaviors - scrolling, screenshot, etc.
   preventDefaultTouchEvents();
+
+
+  //Buttons for testing
+  incrementPositiveButton = createButton('+1');
+  incrementPositiveButton.position(10, 30);
+  incrementPositiveButton.mousePressed(towerPair.initiateIncrementPositive);
+
+  incrementNegativeButton = createButton('-1');
+  incrementNegativeButton.position(50, 30);
+  incrementNegativeButton.mousePressed(towerPair.initiateIncrementNegative);
+  
+
+  pinchInButton = createButton('Pinch In');
+  pinchInButton.position(150, 30);
+  pinchInButton.mousePressed(towerPair.initiatePinchIn);
+
+  
+  pinchOutButton = createButton('Pinch Out');
+  pinchOutButton.position(250, 30);
+  pinchOutButton.mousePressed(towerPair.initiatePinchOut);
+
+  
+  flipButton = createButton('Flip');
+  flipButton.position(350, 30);
+  flipButton.mousePressed(towerPair.initiateFlip);
 }
 
 function draw() {
-  background(220);
+  background(230);
 
   //Draw line across screen
   stroke(0);
@@ -33,24 +59,36 @@ function draw() {
   //Interaction
 
   //Drawing on each side
-  for (let i = 0; i < objectList.length; i++) {
-    let object = objectList[i];
-    object.renderPositive();
-    object.renderNegative();
-  }
 
-  console.log(objectList);
+  towerPair.renderPositive();
+  towerPair.renderNegative();
 
   //Animations
   if (currentlyAnimating.INCREMENTING_POSITIVE) {
-    objectList[0].incrementPositive();
+    console.log("Incrementing Positive")
+
+    towerPair.incrementPositive();
   }
   if (currentlyAnimating.INCREMENTING_NEGATIVE) {
-
+    console.log("Incrementing Negative")
+    towerPair.incrementNegative();
   }
 
   if(currentlyAnimating.FLIPPING){
-    
+    towerPair.flip();
   }
+
+  
+  if(currentlyAnimating.PINCHING_IN){
+    console.log("PINCHING INN")
+    towerPair.pinchIn();
+  }
+
+  if(currentlyAnimating.PINCHING_OUT){
+    console.log("PINCHING OUT")
+
+    towerPair.pinchOut();
+  }
+
 }
 
