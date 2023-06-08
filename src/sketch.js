@@ -3,23 +3,20 @@ CONCEPTS AND TERMS:
 
 1. A 'Tower Pair' is one coupled pair of positive tower and negative tower - we so far 
 are writing operations to act on a single tower pair.
-
 2. A 'Block' represents either a +1 or a -1. The number of blocks on each side of a tower pair is
 stored in TowerPair.currentPostitiveUnits and TowerPair.currentNegativeUnits.
-
 3. The 'State' of the system can be represented by the number of units on each side, as long as
 there is only a single tower pair representing the whole equation. 
 So conceptually (not necessarily implemented in code, but useful to think of it this way): 
   a. State(towerPair) = {towerPair.currentPostitiveUnits, towerPair.currentNegativeUnits}
   b. State(whole system) = {State(towerPair) for all towerPairs}
-
 4. The 'Division Line' is the visual line that separates positive and negative sides of the screen.
-
 5. An 'Operation' is a leads to a change of state of the system.
 Therefore, if there is a single tower pair, the operation is applied to the tower pair.
 But if there are multiple tower pair, a single operation might have to operate on multiple tower pairs.
 
-OPERATIONS
+OPERATIONS:
+
 The following operations are to be built:
   a. Increment(n, side): increment positive or negative side by n. So adds either a +n or -n to the expression.
   This is implemented with unit increments via initiateIncrementPositive or initiateIncrementNegative.
@@ -34,14 +31,23 @@ The following operations are to be built:
   Called by pinching out.
 
 
-
-
-5. Animations represent transitions between states.
-
-
 ANIMATION FLOW CONTROL LOGIC:
+
+Animations represent transitions between states (except for some animations like zoom in/zoom out).
 Most animations are associated with a mathematical operation on the integer expression.
-This means that there needs to be a change of state at the end of the animation.
+This means that there needs to be a change of state at the end of the state transition animation.
+
+The general strategy is:
+- For each operation there will be two methods/functions: one is operation() and the other is initiateOperation().
+- initiateOperation() is to be called once when a relevant touch event occurs. This sets an operation trigger to true.
+- The operation implmentation itself is spread out over time because of the animation. Therefore it is to be called in draw
+- As long as the operation trigger is true, the operation() function is to be called continuously in draw().
+- Inside the operation() function two main things are done: 
+    (a) Animation being called continuously
+    (b) Once animation is terminated, a block of code is to be run a single time.
+        This is done by wrapping it into a conditional for when the animation control variable reaches its terminal value.
+        In this block of code, the state change associated with the operation is implemented.
+        In the same block, the operation trigger is set to false, and the animation control variable is reset.
 
 
 
@@ -53,7 +59,7 @@ let currentObjectIndex = -1;
 let objectList = [];
 let lastTouchTime = 0;
 let dragObject = null;
-let towerPair = new VisualIntegers();
+let towerPair = new TowerPair();
 
 function setup() {
   createCanvas(800, 600);

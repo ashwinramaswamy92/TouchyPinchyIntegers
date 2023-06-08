@@ -1,4 +1,4 @@
-class VisualIntegers {
+class TowerPair {
   constructor() {
     this.objectId = 0;
     this.currentPositiveUnits = 0;

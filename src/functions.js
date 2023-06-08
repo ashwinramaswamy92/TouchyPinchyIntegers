@@ -48,7 +48,7 @@ function touchStarted() {
 
     let new_id = objectList.length === 0 ? 0 : objectList[objectList.length - 1].objectId + 1;
 
-    let visualIntegers = new VisualIntegers();
+    let visualIntegers = new TowerPair();
     visualIntegers.objectId = new_id;
     visualIntegers.time = millis();
 
