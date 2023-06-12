@@ -4,7 +4,7 @@ class TowerPair {
     this.currentPositiveUnits = 0;
     this.currentNegativeUnits = 0;
     this.blockSize = [20, 80];
-    this.position = [0, 0];    
+    this.position = [0, 0];     //The midpoint of the intersection base of both towers.
     this.time = 0;
     this.dragOffset = [0,0];
 
@@ -12,10 +12,20 @@ class TowerPair {
     this.newBlockAlpha = 0;
     this.fractionPinched = 0; //Tracks how far into the pinching animation we are, as a fraction of 1.
     this.fractionPinchedOut = 0;
+    this.flipFactor = 1; //To be implemented as scale(1, flipFactor) in a transformation matrix.
 
     this.pinchingWhitenessFraction = 0; //makeshift whitening of new block.
 
   }
+
+
+
+
+//-------------------------------------------------SETTERS--------------------------------------//
+
+setPosition(x, y){
+  this.position = [x, y];
+}
 
 
 //---------------------------------ANIMATION + OPERATION INITIATORS--------------------------------------//
@@ -57,7 +67,7 @@ class TowerPair {
     //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentPositiveUnits, we could transition into this state via an animation.
 
     //Animation part: animates appearance of a single block by increasing its alpha:
-        let startXY = [width/2 - this.blockSize[0], height/2 - this.blockSize[1]];
+        let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
         this.newBlockAlpha += 25;
         stroke(0, this.newBlockAlpha);
         strokeWeight(2);
@@ -79,7 +89,7 @@ class TowerPair {
   incrementNegative() {    //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentNegativeUnits, we could transition into this state via an animation.
 
     //Animation part: animates appearance of a single block by increasing its alpha:
-        let startXY = [width/2 - this.blockSize[0], height/2];
+        let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1]];
         this.newBlockAlpha += 25;
         stroke(0, this.newBlockAlpha);
         strokeWeight(2);
@@ -101,15 +111,21 @@ class TowerPair {
   flip() {
     //This multiplies the whole expression by -1
 
-    //First we need an animation to flip these along z-axis
+    if(this.flipFactor > -1){
+      //Animation to flip these along z-axis
+      this.flipFactor -= SPEED.flipping;
 
-    
-
-    let temp = this.currentPositiveUnits;
-    this.currentPositiveUnits = this.currentNegativeUnits;
-    this.currentNegativeUnits = temp;
-    currentlyAnimating.FLIPPING = false;
-
+    } else{
+      //Perform the main operation
+      let temp = this.currentPositiveUnits;
+      this.currentPositiveUnits = this.currentNegativeUnits;
+      this.currentNegativeUnits = temp;
+      
+      //Reset animation control variable
+      this.flipFactor = 1;  
+      //Terminate function calls
+      currentlyAnimating.FLIPPING = false;
+    }
   }
 
   pinchIn() {
@@ -117,8 +133,8 @@ class TowerPair {
     
       //First animate the pinch - create a white rectangle with increasing transparency at disappearing blocks
       this.fractionPinched += 25/255;
-      let startXYPositive = [width/2 - this.blockSize[0], height/2 - this.blockSize[1]];
-      let startXYNegative = [width/2 - this.blockSize[0], height/2];
+      let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
+      let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
       strokeWeight(2);
       fill(255, 255*this.fractionPinched);
@@ -147,8 +163,8 @@ class TowerPair {
     
       //First animate the pinch - create a white rectangle with decreasing transparency where new blocks should appear
       this.fractionPinched += 25/255;
-      let startXYPositive = [width/2 - this.blockSize[0], height/2 - this.blockSize[1]];
-      let startXYNegative = [width/2 - this.blockSize[0], height/2];
+      let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
+      let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
       strokeWeight(2);
       fill(255, 255 - 255*this.fractionPinched);
@@ -198,25 +214,51 @@ class TowerPair {
     // Implement the multiplication logic for negative units
   }
 
-  renderPositive() {
-    let startXY = [width/2 - this.blockSize[0], height/2 - this.blockSize[1]];
-    stroke(0);
-    strokeWeight(2);
-    fill(255, 0, 0);
 
-    for (let i = 0; i < this.currentPositiveUnits; i++) {
-      rect(startXY[0], startXY[1] - i * this.blockSize[1], this.blockSize[0], this.blockSize[1]);
-    }
+    //------------------------------------------ RENDERERS ----------------------------------------------------//
+
+
+  renderPositive() {
+    
+    push();
+      translate(this.position[0], this.position[1]);
+      scale(1, this.flipFactor)
+      let startXY = [0 - this.blockSize[0]/2, 0 - this.blockSize[1]];
+      stroke(0);
+      strokeWeight(2);
+      
+      //To keep colors congruent with sign during flipping, we temporarily swap colors during the flip in animation
+      if(this.flipFactor > 0){
+        fill(positiveTowerColor);
+      } else{
+        fill(negativeTowerColor);
+      }
+
+      for (let i = 0; i < this.currentPositiveUnits; i++) {
+        rect(startXY[0], startXY[1] - i * this.blockSize[1], this.blockSize[0], this.blockSize[1]);
+      }
+    pop();
   }
 
   renderNegative() {
-    let startXY = [width/2 - this.blockSize[0], height/2];
-    stroke(0);
-    strokeWeight(2);
-    fill(0, 0, 255);
-    for (let i = 0; i < this.currentNegativeUnits; i++) {
-      rect(startXY[0], startXY[1] + i * this.blockSize[1], this.blockSize[0], this.blockSize[1]);
-    }
+    push();
+      translate(this.position[0], this.position[1]);
+      scale(1, this.flipFactor);
+      let startXY = [0 - this.blockSize[0]/2, 0];
+      stroke(0);
+      strokeWeight(2);
+
+      //To keep colors congruent with sign during flipping, we temporarily swap colors during the flip in animation
+      if(this.flipFactor > 0){
+        fill(negativeTowerColor);
+      } else{
+        fill(positiveTowerColor);
+      }
+
+      for (let i = 0; i < this.currentNegativeUnits; i++) {
+        rect(startXY[0], startXY[1] + i * this.blockSize[1], this.blockSize[0], this.blockSize[1]);
+      }
+    pop();
   }
 
   tryDrag(mouseX, mouseY){

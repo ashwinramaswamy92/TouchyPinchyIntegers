@@ -1,4 +1,8 @@
 
+//----------------------------- GRAPHICS --------------------------------------//
+
+let positiveTowerColor;
+let negativeTowerColor;
 
 
 
@@ -16,6 +20,10 @@ let currentlyAnimating = {
   ZOOMING_OUT: false,
   ZOOMING_IN: false,
   DRAGGING: false
+}
+
+let SPEED = {
+  flipping : 0.05,
 }
 
 

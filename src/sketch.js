@@ -62,45 +62,27 @@ let dragObject = null;
 let towerPair = new TowerPair();
 
 function setup() {
-  createCanvas(800, 600);
-  renderBuffer = createGraphics(800, 600);
+  createCanvas(800, 600);  
+  renderBuffer = createGraphics(width, height);
+
+  //setupColors
+  setupColors();
+
+  //anchor tower pair to center
+  towerPair.setPosition(width/2, height/2)
   
   //Listening for touch events and preventing the default behaviors - scrolling, screenshot, etc.
   preventDefaultTouchEvents();
 
-
-  //Buttons for testing
-  incrementPositiveButton = createButton('+1');
-  incrementPositiveButton.position(10, 30);
-  incrementPositiveButton.mousePressed(towerPair.initiateIncrementPositive);
-
-  incrementNegativeButton = createButton('-1');
-  incrementNegativeButton.position(50, 30);
-  incrementNegativeButton.mousePressed(towerPair.initiateIncrementNegative);
-  
-
-  pinchInButton = createButton('Pinch In');
-  pinchInButton.position(150, 30);
-  pinchInButton.mousePressed(towerPair.initiatePinchIn);
-
-  
-  pinchOutButton = createButton('Pinch Out');
-  pinchOutButton.position(250, 30);
-  pinchOutButton.mousePressed(towerPair.initiatePinchOut);
-
-  
-  flipButton = createButton('Flip');
-  flipButton.position(350, 30);
-  flipButton.mousePressed(towerPair.initiateFlip);
+  //While debugging/developing
+  setupOperatorButtons();
 }
 
 function draw() {
   background(230);
 
   //Draw line across screen
-  stroke(0);
-  strokeWeight(2);
-  line(0, height / 2, width, height / 2);
+  renderDividingLine();
 
   //Tracking number of units on each side
 
