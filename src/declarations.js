@@ -12,8 +12,7 @@ let negativeTowerColor;
 let currentlyAnimating = {
   INCREMENTING_POSITIVE: false,
   INCREMENTING_NEGATIVE: false,
-  SUBTRACTING_POSITIVE: false,
-  SUBTRACTING_NEGATIVE: false,
+  SUBTRACTING: false,
   FLIPPING: false,
   PINCHING_IN: false,
   PINCHING_OUT: false,
@@ -24,10 +23,10 @@ let currentlyAnimating = {
 
 let SPEED = {
   flipping : 0.05,
+  disappearing : 25/255,
 }
 
 
 //----------------------OPERATIONS------------------------------------//
 
-let currentPositiveSubtrahend;
-let currentNegativeSubtrahend;
+let currentSubtrahend;

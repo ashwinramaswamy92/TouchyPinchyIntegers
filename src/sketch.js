@@ -95,12 +95,11 @@ function draw() {
 
   //Animations
   if (currentlyAnimating.INCREMENTING_POSITIVE) {
-    console.log("Incrementing Positive")
-
+    // console.log("Incrementing Positive")
     towerPair.incrementPositive();
   }
   if (currentlyAnimating.INCREMENTING_NEGATIVE) {
-    console.log("Incrementing Negative")
+    // console.log("Incrementing Negative")
     towerPair.incrementNegative();
   }
 
@@ -110,14 +109,18 @@ function draw() {
 
   
   if(currentlyAnimating.PINCHING_IN){
-    console.log("PINCHING INN")
+    // console.log("PINCHING INN")
     towerPair.pinchIn();
   }
 
   if(currentlyAnimating.PINCHING_OUT){
-    console.log("PINCHING OUT")
-
+    // console.log("PINCHING OUT")
     towerPair.pinchOut();
+  }
+
+  if(currentlyAnimating.SUBTRACTING){
+    // console.log("SUBTRACTING")
+    towerPair.subtract(currentSubtrahend)
   }
 
 }

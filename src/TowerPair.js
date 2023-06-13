@@ -10,7 +10,9 @@ class TowerPair {
 
     //Animation state tracking variables
     this.newBlockAlpha = 0;
-    this.fractionPinched = 0; //Tracks how far into the pinching animation we are, as a fraction of 1.
+    this.positiveTowerAlpha = 255;
+    this.negativeTowerAlpha = 255;
+    this.fractionDisappeared = 0; //Tracks how far into the disappearing animation of a block we are, as a fraction of 1.
     this.fractionPinchedOut = 0;
     this.flipFactor = 1; //To be implemented as scale(1, flipFactor) in a transformation matrix.
 
@@ -35,13 +37,13 @@ setPosition(x, y){
   initiateIncrementPositive(){
     //Call this when you want to add one to positive side, and this will call addPositive() while taking care of the animation timing
    
-    console.log("Initiated Incremented Postive"); 
+    // console.log("Initiated Incremented Postive"); 
     currentlyAnimating.INCREMENTING_POSITIVE = true;
   }
 
   initiateIncrementNegative(){
     //Call this when you want to add one to positive side, and this will call addPositive() while taking care of the animation timing
-    console.log("Initiated Incremented Negative");  
+    // console.log("Initiated Incremented Negative");  
     currentlyAnimating.INCREMENTING_NEGATIVE = true;
   }
   
@@ -61,6 +63,10 @@ setPosition(x, y){
 
   initiatePinchOut(){
     currentlyAnimating.PINCHING_OUT = true;
+  }
+
+  initiateSubtract(){
+    currentlyAnimating.SUBTRACTING = true;
   }
   
   incrementPositive() {
@@ -132,26 +138,26 @@ setPosition(x, y){
     //Nullifies the basemost (closest to baseline) pair of positive and negative units, if such a pair exists
     
       //First animate the pinch - create a white rectangle with increasing transparency at disappearing blocks
-      this.fractionPinched += 25/255;
+      this.fractionDisappeared += SPEED.disappearing;
       let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
       let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
       strokeWeight(2);
-      fill(255, 255*this.fractionPinched);
+      fill(255, 255*this.fractionDisappeared);
       
       rect(startXYNegative[0], startXYNegative[1] + ((0) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
       rect(startXYPositive[0], startXYPositive[1] - ((0) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
       
 
       //Then check for termination condition, and perform the pinching in operation
-      if(this.fractionPinched >= 1){
+      if(this.fractionDisappeared >= 1){
 
         //Perform changes to state variables required of the function
         this.currentNegativeUnits -= 1;
         this.currentPositiveUnits -= 1;
 
         //reset termination
-        this.fractionPinched = 0;
+        this.fractionDisappeared = 0;
 
         //break out of calling the method in draw()
         currentlyAnimating.PINCHING_IN = false;
@@ -162,26 +168,26 @@ setPosition(x, y){
     //Adds one each of positive and negative units
     
       //First animate the pinch - create a white rectangle with decreasing transparency where new blocks should appear
-      this.fractionPinched += 25/255;
+      this.fractionDisappeared += SPEED.disappearing;
       let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
       let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
       strokeWeight(2);
-      fill(255, 255 - 255*this.fractionPinched);
+      fill(255, 255 - 255*this.fractionDisappeared);
       
       rect(startXYNegative[0], startXYNegative[1] + ((this.currentNegativeUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
       rect(startXYPositive[0], startXYPositive[1] - ((this.currentPositiveUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
       
 
       //Then check for termination condition, and perform the pinching in operation
-      if(this.fractionPinched >= 1){
+      if(this.fractionDisappeared >= 1){
 
         //Perform changes to state variables required of the function
         this.currentNegativeUnits += 1;
         this.currentPositiveUnits += 1;
 
         //reset termination
-        this.fractionPinched = 0;
+        this.fractionDisappeared = 0;
 
         //break out of calling the method in draw()
         currentlyAnimating.PINCHING_OUT = false;
@@ -190,19 +196,60 @@ setPosition(x, y){
 
   }
 
-  simplify() {
-    //This simplifies the whole expression. Basically pinches in as many times as possible all at once
+  // simplify() {
+  //   //This simplifies the whole expression. Basically pinches in as many times as possible all at once
 
-    let difference = this.currentPositiveUnits - this.currentNegativeUnits;
+  //   let difference = this.currentPositiveUnits - this.currentNegativeUnits;
 
-    if (difference >= 0) {
-      this.currentPositiveUnits = difference;
-      this.currentNegativeUnits = 0;
-    } else {
-      this.currentNegativeUnits = Math.abs(difference);
-      this.currentPositiveUnits = 0;
+  //   if (difference >= 0) {
+  //     this.currentPositiveUnits = difference;
+  //     this.currentNegativeUnits = 0;
+  //   } else {
+  //     this.currentNegativeUnits = Math.abs(difference);
+  //     this.currentPositiveUnits = 0;
+  //   }
+  // }
+
+  subtract(subtrahend){
+    //The subtrahend is a signed integer, the sign determines which tower (+ or -) is operated on
+    //First animate the subtraction
+    if(subtrahend > 0 && this.currentPositiveUnits >= Math.abs(subtrahend)){ //Positive tower subtraction
+      //Animate the disappearance - create a white rectangle with increasing transparency at disappearing blocks
+      this.fractionDisappeared += SPEED.disappearing;
+      let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
+      stroke(255);
+      strokeWeight(2);
+      fill(255, 255*this.fractionDisappeared);
+      for(let i = 0; i < Math.abs(subtrahend); i++){
+        rect(startXY[0], startXY[1] - (i * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
+      }
+    } else if (subtrahend < 0 && this.currentNegativeUnits >= Math.abs(subtrahend)){ //Negative tower subtraction
+      this.fractionDisappeared += SPEED.disappearing;
+      let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1]];
+      stroke(255);
+      strokeWeight(2);
+      fill(255, 255*this.fractionDisappeared);
+      for(let i = 0; i < Math.abs(subtrahend); i++){
+        rect(startXY[0], startXY[1] + (i * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
+      }
     }
+
+
+    //Finally perform the operation after animation control variable reaches terminal value
+    if(this.fractionDisappeared >= 1){
+      if(subtrahend > 0 && this.currentPositiveUnits >= Math.abs(subtrahend)){
+        this.currentPositiveUnits -= Math.abs(subtrahend);
+      } else if (subtrahend < 0 && this.currentNegativeUnits >= Math.abs(subtrahend)){
+        this.currentNegativeUnits -= Math.abs(subtrahend);
+      }
+      //Resetting animation control variable
+      this.fractionDisappeared = 0;
+      //break out of calling the method in draw()
+      currentlyAnimating.SUBTRACTING = false;
+    }
+
   }
+
 
 
 
@@ -226,6 +273,7 @@ setPosition(x, y){
       let startXY = [0 - this.blockSize[0]/2, 0 - this.blockSize[1]];
       stroke(0);
       strokeWeight(2);
+      // transparency(this.positiveTowerAlpha);
       
       //To keep colors congruent with sign during flipping, we temporarily swap colors during the flip in animation
       if(this.flipFactor > 0){
@@ -247,6 +295,7 @@ setPosition(x, y){
       let startXY = [0 - this.blockSize[0]/2, 0];
       stroke(0);
       strokeWeight(2);
+      // transparency(this.negativeTowerAlpha);
 
       //To keep colors congruent with sign during flipping, we temporarily swap colors during the flip in animation
       if(this.flipFactor > 0){

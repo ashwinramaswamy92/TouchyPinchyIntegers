@@ -70,7 +70,29 @@ function setupOperatorButtons(){
   flipButton.position(350, 30);
   flipButton.mousePressed(towerPair.initiateFlip);
 
+  subtractPInput = createInput(0)
+  subtractPButton = createButton('Subtract +');
+  subtractPButton.position(20, 70);
+  subtractPInput.position(100, 70);
+  subtractPButton.mousePressed(setPositiveSubtrahend);
 
+  subtractNInput = createInput(0)
+  subtractNButton = createButton('Subtract -');
+  subtractNButton.position(220, 70);
+  subtractNInput.position(300, 70);
+  subtractNButton.mousePressed(setNegativeSubtrahend);
+
+
+}
+
+function setPositiveSubtrahend(){
+  currentSubtrahend = int(subtractPInput.value());
+  towerPair.initiateSubtract();
+}
+
+function setNegativeSubtrahend(){
+  currentSubtrahend = -1*int(subtractNInput.value());
+  towerPair.initiateSubtract();
 }
 
 // ---------------FOR MULTIPLE TOWERS-----------------------//
