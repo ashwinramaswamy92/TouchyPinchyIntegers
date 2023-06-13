@@ -12,12 +12,8 @@ class TowerPair {
     this.newBlockAlpha = 0;
     this.positiveTowerAlpha = 255;
     this.negativeTowerAlpha = 255;
-    this.fractionDisappeared = 0; //Tracks how far into the disappearing animation of a block we are, as a fraction of 1.
-    this.fractionPinchedOut = 0;
-    this.flipFactor = 1; //To be implemented as scale(1, flipFactor) in a transformation matrix.
-
-    this.pinchingWhitenessFraction = 0; //makeshift whitening of new block.
-
+    this.fractionDisappeared = 0; //Tracks how far into the (dis)appearing animation of a block we are, as a fraction of 1.
+    this.flipFactor = 1; //To be implemented as scale(1, flipFactor) in a transformation matrix during rendering.
   }
 
 
@@ -74,7 +70,7 @@ setPosition(x, y){
 
     //Animation part: animates appearance of a single block by increasing its alpha:
         let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
-        this.newBlockAlpha += 25;
+        this.newBlockAlpha += 25;     //The main animating step
         stroke(0, this.newBlockAlpha);
         strokeWeight(2);
         fill(255, 0, 0, this.newBlockAlpha);
@@ -86,8 +82,8 @@ setPosition(x, y){
             this.currentPositiveUnits += 1;
 
           //Reset termination criteria
-            currentlyAnimating.INCREMENTING_POSITIVE = false;
-            this.newBlockAlpha = 0;
+            currentlyAnimating.INCREMENTING_POSITIVE = false; //Stop calling this function in draw()
+            this.newBlockAlpha = 0;   //Reset all animation state variables to allow future animations
         }
   }
 
@@ -96,7 +92,7 @@ setPosition(x, y){
 
     //Animation part: animates appearance of a single block by increasing its alpha:
         let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1]];
-        this.newBlockAlpha += 25;
+        this.newBlockAlpha += 25;     //The main animating step
         stroke(0, this.newBlockAlpha);
         strokeWeight(2);
         fill(0, 0, 255, this.newBlockAlpha);
@@ -119,7 +115,9 @@ setPosition(x, y){
 
     if(this.flipFactor > -1){
       //Animation to flip these along z-axis
-      this.flipFactor -= SPEED.flipping;
+      this.flipFactor -= SPEED.flipping;     //The main animating step
+      //Note that flipfactor is implmented as a scaling variable in the rendering methods.
+      //flipFactor = -1 means the object being drawn is flipped completely about y axis.
 
     } else{
       //Perform the main operation
@@ -138,7 +136,7 @@ setPosition(x, y){
     //Nullifies the basemost (closest to baseline) pair of positive and negative units, if such a pair exists
     
       //First animate the pinch - create a white rectangle with increasing transparency at disappearing blocks
-      this.fractionDisappeared += SPEED.disappearing;
+      this.fractionDisappeared += SPEED.disappearing;       //The main animating step
       let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
       let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
@@ -168,7 +166,7 @@ setPosition(x, y){
     //Adds one each of positive and negative units
     
       //First animate the pinch - create a white rectangle with decreasing transparency where new blocks should appear
-      this.fractionDisappeared += SPEED.disappearing;
+      this.fractionDisappeared += SPEED.disappearing;       //The main animating step
       let startXYPositive = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
       let startXYNegative = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
@@ -211,11 +209,14 @@ setPosition(x, y){
   // }
 
   subtract(subtrahend){
-    //The subtrahend is a signed integer, the sign determines which tower (+ or -) is operated on
+  //Removes n = subtrahend blocks from either positive or negative tower.
+  //The subtrahend is a signed integer, the sign determines which tower (+ or -) is operated on
+    
     //First animate the subtraction
     if(subtrahend > 0 && this.currentPositiveUnits >= Math.abs(subtrahend)){ //Positive tower subtraction
+      
       //Animate the disappearance - create a white rectangle with increasing transparency at disappearing blocks
-      this.fractionDisappeared += SPEED.disappearing;
+      this.fractionDisappeared += SPEED.disappearing;     //The main animating step
       let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1] - this.blockSize[1]];
       stroke(255);
       strokeWeight(2);
@@ -223,8 +224,11 @@ setPosition(x, y){
       for(let i = 0; i < Math.abs(subtrahend); i++){
         rect(startXY[0], startXY[1] - (i * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
       }
-    } else if (subtrahend < 0 && this.currentNegativeUnits >= Math.abs(subtrahend)){ //Negative tower subtraction
-      this.fractionDisappeared += SPEED.disappearing;
+    } 
+    else if (subtrahend < 0 && this.currentNegativeUnits >= Math.abs(subtrahend)){ //Negative tower subtraction
+      
+      //Animate the disappearance - create a white rectangle with increasing transparency at disappearing blocks
+      this.fractionDisappeared += SPEED.disappearing;     //The main animating step
       let startXY = [this.position[0] - this.blockSize[0]/2, this.position[1]];
       stroke(255);
       strokeWeight(2);
@@ -236,7 +240,7 @@ setPosition(x, y){
 
 
     //Finally perform the operation after animation control variable reaches terminal value
-    if(this.fractionDisappeared >= 1){
+    if(this.fractionDisappeared >= 1){  //ie if animation has ended
       if(subtrahend > 0 && this.currentPositiveUnits >= Math.abs(subtrahend)){
         this.currentPositiveUnits -= Math.abs(subtrahend);
       } else if (subtrahend < 0 && this.currentNegativeUnits >= Math.abs(subtrahend)){
@@ -266,10 +270,18 @@ setPosition(x, y){
 
 
   renderPositive() {
+    //Rendering it within a transformation matrix so that flipping can be implemented as scaling
     
     push();
+      //translate(x, y) means that within this push-pop block (0, 0) is now going to be at (x, y) of original canvas.
       translate(this.position[0], this.position[1]);
+      
+      //scale(dx, dy) means that anything drawn within push-pop block will be stretched/shrunk by factors of...
+      //...dx along x-axis and dy along y-axxis (wrt the new origin if translate(x, y) is called first like here).
+      
+      //Note that flipfactor is 1 throughout the simulation except for when a flipping animation is occurring
       scale(1, this.flipFactor)
+      
       let startXY = [0 - this.blockSize[0]/2, 0 - this.blockSize[1]];
       stroke(0);
       strokeWeight(2);
@@ -289,13 +301,22 @@ setPosition(x, y){
   }
 
   renderNegative() {
+    //Rendering it within a transformation matrix so that flipping can be implemented as scaling
+
     push();
-      translate(this.position[0], this.position[1]);
+      //translate(x, y) means that within this push-pop block (0, 0) is now going to be at (x, y) of original canvas.
+      translate(this.position[0], this.position[1]);  
+      
+      //scale(dx, dy) means that anything drawn within push-pop block will be stretched/shrunk...
+      //... by factors of dx along x axis and dy along y axxis, wrt the new origin (if translate(x, y) is called first).
+      
+      //Note that flipfactor is 1 throughout the simulation except for when a flipping animation is occurring
       scale(1, this.flipFactor);
+      
       let startXY = [0 - this.blockSize[0]/2, 0];
       stroke(0);
       strokeWeight(2);
-      // transparency(this.negativeTowerAlpha);
+      // transparency(this.negativeTowerAlpha); //If one must implement this, we need to use Color.setAlpha instead
 
       //To keep colors congruent with sign during flipping, we temporarily swap colors during the flip in animation
       if(this.flipFactor > 0){
