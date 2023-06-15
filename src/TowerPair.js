@@ -3,7 +3,7 @@ class TowerPair {
     this.objectId = 0;
     this.currentPositiveUnits = 0;
     this.currentNegativeUnits = 0;
-    this.blockSize = [20, 80];
+    this.blockSize = [40, 40];
     this.position = [0, 0];     //The midpoint of the intersection base of both towers.
     this.time = 0;
     this.dragOffset = [0,0];
