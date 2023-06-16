@@ -1,3 +1,15 @@
+//--------------------- SCOREKEEPING/EXPRESSION RENDERING -----------------------------------------//
+
+function showDynamicExpression(x = width*2/3, y = height*1/3){
+  textSize(expressionTextSize);
+  let expressionString = towerPair.currentPositiveUnits + " + (-" + towerPair.currentNegativeUnits + ") = ?"
+  text(expressionString, x, y);
+}
+
+
+
+
+
 //----------------------- GRAPHICS--------------------------------------------------//
 function renderDividingLine(){
   rectMode(CORNER);
@@ -39,8 +51,9 @@ function preventDefaultTouchEvents(){
 
 function setupColors(){
   positiveTowerColor = color(255, 0, 0);
-  
   negativeTowerColor = color(0, 0, 255);
+
+  expressionColor = color(0, 255, 0);
 }
 
 

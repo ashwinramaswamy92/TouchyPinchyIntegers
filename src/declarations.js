@@ -3,7 +3,9 @@
 
 let positiveTowerColor;
 let negativeTowerColor;
+let expressionColor;
 
+let expressionTextSize = 28;
 
 
 //----------------------ANIMATIONS-----------------------------------//

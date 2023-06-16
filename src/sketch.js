@@ -83,17 +83,15 @@ function draw() {
 
   //Draw line across screen
   renderDividingLine();
-
-  //Tracking number of units on each side
+  
 
   //Interaction
 
   //Drawing on each side
-
   towerPair.renderPositive();
   towerPair.renderNegative();
 
-  //Animations
+  //Animations and operations
   if (currentlyAnimating.INCREMENTING_POSITIVE) {
     // console.log("Incrementing Positive")
     towerPair.incrementPositive();
@@ -122,6 +120,10 @@ function draw() {
     // console.log("SUBTRACTING")
     towerPair.subtract(currentSubtrahend)
   }
+
+  // Dynamic Expression Rendering
+  showDynamicExpression();
+
 
 }
 
