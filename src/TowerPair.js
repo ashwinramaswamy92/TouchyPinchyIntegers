@@ -20,10 +20,46 @@ class TowerPair {
 
 
 
-  //-------------------------------------------------SETTERS--------------------------------------//
+  //--------------------------------------------SETTERS-----------------------------------------//
 
   setPosition(x, y) {
     this.position = [x, y];
+  }
+
+
+  //-------------------------------------------- GETTERS --------------------------------------//
+
+  getBlockHeadTargetPositions(){
+    //Returns a object containing x and y of subtraction target of each block of each side.
+    let positiveArray = [];
+    let negativeArray = [];
+
+    for (let i = 0; i < this.currentPositiveUnits; i++){
+      let point = {
+        x : this.position[0],
+        y : this.position[1] - (i + 1)*this.blockSize[1]
+      }
+      positiveArray.push(point);
+    }
+    
+    for (let i = 0; i < this.currentNegativeUnits; i++){
+      let point = {
+        x : this.position[0],
+        y : this.position[1] + (i + 1)*this.blockSize[1]
+      }
+      negativeArray.push(point);
+    }
+
+    let returnObject = {
+      positive : positiveArray,
+      negative : negativeArray
+    }
+    return returnObject;
+  }
+
+  getHitBoxRadius(){
+    //Returns the computed radius of the hitbox for subtraction based on block size
+    return this.blockSize[1]*hitBoxAccuracy;
   }
 
 

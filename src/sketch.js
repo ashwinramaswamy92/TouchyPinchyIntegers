@@ -77,22 +77,23 @@ let canvasContainer;
 let canvas;
 
 function setup() {
-  
+
   //Using a container the same size as the canvas for hammer.js to detect touch events
   canvasContainer = document.getElementById('swipe-container');
   canvas = createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
   canvas.parent(canvasContainer);
+  canvas.position(0, 0); 
 
   //setupColors
   setupColors();
 
 
   //anchor tower pair to center
-  towerPair.setPosition(width/2, height/2)
-  
+  towerPair.setPosition(width / 2, height / 2)
+
   //setup touch funcctions
   // setupTouch();
-  
+
   //Listening for touch events and preventing the default behaviors - scrolling, screenshot, etc.
   preventDefaultTouchEvents();
 
@@ -103,9 +104,14 @@ function setup() {
 function draw() {
   background(230);
 
+
+
+
   //Draw line across screen
   renderDividingLine();
-  
+
+
+
 
   //Interaction
   triggerTouchEvents();
@@ -113,6 +119,11 @@ function draw() {
   //Drawing on each side
   towerPair.renderPositive();
   towerPair.renderNegative();
+
+  
+  //To see tap and swipe coords FOR DEBUGGING
+  showTapAndSwipe();
+
 
   //Animations and operations
   if (currentlyAnimating.INCREMENTING_POSITIVE) {
@@ -124,22 +135,22 @@ function draw() {
     towerPair.incrementNegative();
   }
 
-  if(currentlyAnimating.FLIPPING){
+  if (currentlyAnimating.FLIPPING) {
     towerPair.flip();
   }
 
-  
-  if(currentlyAnimating.PINCHING_IN){
+
+  if (currentlyAnimating.PINCHING_IN) {
     // console.log("PINCHING INN")
     towerPair.pinchIn();
   }
 
-  if(currentlyAnimating.PINCHING_OUT){
+  if (currentlyAnimating.PINCHING_OUT) {
     // console.log("PINCHING OUT")
     towerPair.pinchOut();
   }
 
-  if(currentlyAnimating.SUBTRACTING){
+  if (currentlyAnimating.SUBTRACTING) {
     // console.log("SUBTRACTING")
     towerPair.subtract(currentSubtrahend)
   }
@@ -150,5 +161,8 @@ function draw() {
 
   //Resetting Anything that needs be reset
   resetTouchEvents();
+
+
+
 }
 
