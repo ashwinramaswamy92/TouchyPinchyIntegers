@@ -121,8 +121,8 @@ function draw() {
   towerPair.renderNegative();
 
   
-  //To see tap and swipe coords FOR DEBUGGING
-  showTapAndSwipe();
+  //FOR DEBUGGING: To visualize tap and swipe coordinates 
+  // showTapAndSwipe();
 
 
   //Animations and operations
