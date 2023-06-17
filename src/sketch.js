@@ -61,21 +61,31 @@ let lastTouchTime = 0;
 let dragObject = null;
 let towerPair = new TowerPair();
 
+let canvasContainer;
+let canvas;
+
 function setup() {
-  createCanvas(800, 600);  
-  renderBuffer = createGraphics(width, height);
+  
+  //Using a container the same size as the canvas for hammer.js to detect touch events
+  canvasContainer = document.getElementById('swipe-container');
+  canvas = createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
+  canvas.parent(canvasContainer);
 
   //setupColors
   setupColors();
 
+
   //anchor tower pair to center
   towerPair.setPosition(width/2, height/2)
+  
+  //setup touch funcctions
+  // setupTouch();
   
   //Listening for touch events and preventing the default behaviors - scrolling, screenshot, etc.
   preventDefaultTouchEvents();
 
   //While debugging/developing
-  setupOperatorButtons();
+  // setupOperatorButtons();
 }
 
 function draw() {

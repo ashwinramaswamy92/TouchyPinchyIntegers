@@ -32,3 +32,4 @@ let SPEED = {
 //----------------------OPERATIONS------------------------------------//
 
 let currentSubtrahend;
+let numberOfTaps;

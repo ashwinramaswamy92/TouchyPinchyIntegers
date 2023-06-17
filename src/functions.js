@@ -1,6 +1,46 @@
+//---------------------------------------- TOUCHSCREEN -------------------------------------------//
+  document.addEventListener('DOMContentLoaded', function() {
+    var element = document.getElementById('swipe-container');
+  var hammertime = new Hammer(element);
+
+  element.addEventListener('touchstart', function(event) {
+    var numFingers = event.touches.length;
+    numberOfTaps = numFingers;
+    printout('tap with ' + numFingers + ' finger(s)');
+
+    if (event.touches[0].clientY < (element.offsetHeight / 2)) {
+      towerPair.initiateIncrementPositive();
+    }
+    else {
+      towerPair.initiateIncrementNegative();
+    }
+  });
+
+  hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+  hammertime.on('swipeup', function(event) {
+    printout('flip');
+    towerPair.initiateFlip();
+  });
+  hammertime.on('swipedown', function(event) {
+    printout('flip');
+    towerPair.initiateFlip();
+  });
+});
+
+
+function printout(myText) {
+  var messageElement = document.getElementById('message');
+  messageElement.textContent = myText;
+}
+
+
+
+
+
 //--------------------- SCOREKEEPING/EXPRESSION RENDERING -----------------------------------------//
 
-function showDynamicExpression(x = width*2/3, y = height*1/3){
+function showDynamicExpression(x = width*1/20, y = height*1/3){
   textSize(expressionTextSize);
   let expressionString = towerPair.currentPositiveUnits + " + (-" + towerPair.currentNegativeUnits + ") = ?"
   text(expressionString, x, y);
@@ -97,6 +137,12 @@ function setupOperatorButtons(){
 
 
 }
+
+
+//numberOfTaps <- global variable
+//When we tap with n fingers, we need to (a) set numberOfTaps = n; (b) initateIncrement
+//in draw(), under if(currentlyAnimating.incrementblah) { increment(numberOfTaps) }
+
 
 function setPositiveSubtrahend(){
   currentSubtrahend = int(subtractPInput.value());
