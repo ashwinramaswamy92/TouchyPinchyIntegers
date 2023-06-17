@@ -58,12 +58,12 @@ function triggerTouchEvents(){
   //To trigger touch events if any detected in this cycle;
   if(pinchedThisCycle){
     printout("PINCHED");
-    //Falsify the tapping flag to prevent that event
+    //Defuse Bomb: Falsify the tapping flag to prevent that event
     isPreparingToTap = false;
   }
   if(swipedThisCycle){
     printout("SWIPED");
-    //Falsify the tapping flag to prevent that event
+    //Defuse Bomb: Falsify the tapping flag to prevent that event
     isPreparingToTap = false;
   }
 
