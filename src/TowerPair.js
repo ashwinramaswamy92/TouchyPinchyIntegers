@@ -9,7 +9,8 @@ class TowerPair {
     this.dragOffset = [0, 0];
 
     //Animation state tracking variables
-    this.newBlockAlpha = 0;
+    this.newPositiveBlockAlpha = 0;
+    this.newNegativeBlockAlpha = 0;
     this.positiveTowerAlpha = 255;
     this.negativeTowerAlpha = 255;
     this.fractionDisappeared = 0; //Tracks how far into the (dis)appearing animation of a block we are, as a fraction of 1.
@@ -67,49 +68,51 @@ class TowerPair {
 
   incrementPositive() {
     //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentPositiveUnits, we could transition into this state via an animation.
-    //numberOfTaps is a global that stores the number of taps done last. Add as many blocks as the number of taps.
+    //preparedTapIncrements[0] is a global that stores the number of positive taps prepared.
 
     //Animation part: animates appearance of a single block by increasing its alpha:
     let startXY = [this.position[0] - this.blockSize[0] / 2, this.position[1] - this.blockSize[1]];
-    this.newBlockAlpha += 25;     //The main animating step
-    stroke(0, this.newBlockAlpha);
+    this.newPositiveBlockAlpha += 25;     //The main animating step
+    stroke(0, this.newPositiveBlockAlpha);
     strokeWeight(2);
-    fill(255, 0, 0, this.newBlockAlpha);
-    for (let i = 0; i < numberOfTaps; i++) {
+    fill(255, 0, 0, this.newPositiveBlockAlpha);
+    for (let i = 0; i < preparedTapIncrements[0]; i++) {
       rect(startXY[0], startXY[1] - ((i + this.currentPositiveUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
     }
     //Once animation termination is reached, perform the function's primary action, and then reset termination criteria for animations
-    if (this.newBlockAlpha >= 255) {
+    if (this.newPositiveBlockAlpha >= 255) {
       //Changes to state variables required of the function
-      this.currentPositiveUnits += numberOfTaps;
+      this.currentPositiveUnits += preparedTapIncrements[0];
 
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_POSITIVE = false; //Stop calling this function in draw()
-      this.newBlockAlpha = 0;   //Reset all animation state variables to allow future animations
+      this.newPositiveBlockAlpha = 0;   //Reset all animation state variables to allow future animations
     }
   }
 
 
-  incrementNegative() {    //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentNegativeUnits, we could transition into this state via an animation.
+  incrementNegative() {    
+    //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentNegativeUnits, we could transition into this state via an animation.
+    //preparedTapIncrements[1] is a global that stores the number of negative taps prepared.
 
     //Animation part: animates appearance of a single block by increasing its alpha:
     let startXY = [this.position[0] - this.blockSize[0] / 2, this.position[1]];
-    this.newBlockAlpha += 25;     //The main animating step
-    stroke(0, this.newBlockAlpha);
+    this.newNegativeBlockAlpha += 25;     //The main animating step
+    stroke(0, this.newNegativeBlockAlpha);
     strokeWeight(2);
-    fill(0, 0, 255, this.newBlockAlpha);
-    for (let i = 0; i < numberOfTaps; i++) {
+    fill(0, 0, 255, this.newNegativeBlockAlpha);
+    for (let i = 0; i < preparedTapIncrements[1]; i++) {
       rect(startXY[0], startXY[1] + ((i + this.currentNegativeUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
     }
     //Once animation termination is reached, perform the function's primary action, and then reset termination criteria for animations
-    if (this.newBlockAlpha >= 255) {
+    if (this.newNegativeBlockAlpha >= 255) {
 
       //Changes to state variables required of the function
-      this.currentNegativeUnits += numberOfTaps;
+      this.currentNegativeUnits += preparedTapIncrements[1];
 
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_NEGATIVE = false;
-      this.newBlockAlpha = 0;
+      this.newNegativeBlockAlpha = 0;
     }
   }
 
@@ -197,20 +200,6 @@ class TowerPair {
 
   }
 
-  // simplify() {
-  //   //This simplifies the whole expression. Basically pinches in as many times as possible all at once
-
-  //   let difference = this.currentPositiveUnits - this.currentNegativeUnits;
-
-  //   if (difference >= 0) {
-  //     this.currentPositiveUnits = difference;
-  //     this.currentNegativeUnits = 0;
-  //   } else {
-  //     this.currentNegativeUnits = Math.abs(difference);
-  //     this.currentPositiveUnits = 0;
-  //   }
-  // }
-
   subtract(subtrahend) {
     //Removes n = subtrahend blocks from either positive or negative tower.
     //The subtrahend is a signed integer, the sign determines which tower (+ or -) is operated on
@@ -256,9 +245,6 @@ class TowerPair {
     }
 
   }
-
-
-
 
   multiplyPositive(multiplicand) {
     // Implement the multiplication logic for positive units

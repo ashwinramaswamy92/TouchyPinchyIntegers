@@ -1,39 +1,94 @@
 //---------------------------------------- TOUCHSCREEN -------------------------------------------//
   document.addEventListener('DOMContentLoaded', function() {
     var element = document.getElementById('swipe-container');
-  var hammertime = new Hammer(element);
+    var hammertime = new Hammer(element);
 
-  element.addEventListener('touchstart', function(event) {
-    var numFingers = event.touches.length;
-    numberOfTaps = numFingers;
-    printout('tap with ' + numFingers + ' finger(s)');
+    element.addEventListener('touchstart', function(event) {
+      prepareTap(event.touches, element);
+    });
 
-    if (event.touches[0].clientY < (element.offsetHeight / 2)) {
-      towerPair.initiateIncrementPositive();
-    }
-    else {
-      towerPair.initiateIncrementNegative();
-    }
-  });
+    hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
-  hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-
-  hammertime.on('swipeup', function(event) {
-    printout('flip');
-    towerPair.initiateFlip();
-  });
-  hammertime.on('swipedown', function(event) {
-    printout('flip');
-    towerPair.initiateFlip();
-  });
+    hammertime.on('swipeup', function(event) {
+      printout('flip');
+      // towerPair.initiateFlip();
+      swipedThisCycle = true;
+    });
+    hammertime.on('swipedown', function(event) {
+      printout('flip');
+      // towerPair.initiateFlip();
+      swipedThisCycle = true;
+    });
 });
 
+function prepareTap(touches, container){
+
+  //Set off a 'time bomb' for taps and records the time.
+  isPreparingToTap = true;
+  lastTapTime = millis();
+
+  //For debugging, 
+
+
+  //Record the number of taps: OBSELETE, We WISH TO MOVE TO A 2-d REPRESENTATATION.
+  numberOfTaps = touches.length;
+  printout('taped with ' + numberOfTaps + ' finger(s)');
+
+  //Re-initialize tap counter
+  preparedTapIncrements = [0, 0];
+  //Decode from position of each tap the side at which an increment must occur.
+  for(let i = 0; i < touches.length; i++){
+    if (touches[i].clientY < (container.offsetHeight / 2)) {
+      //This tap detected on top side, so prepare one more positive increment
+      preparedTapIncrements[0] += 1;
+    } else{
+      //This tap detected on bottom side, so prepare one more negative increment
+      preparedTapIncrements[1] += 1;
+    }
+  }
+}
 
 function printout(myText) {
   var messageElement = document.getElementById('message');
   messageElement.textContent = myText;
 }
 
+
+function triggerTouchEvents(){
+  //To trigger touch events if any detected in this cycle;
+  if(pinchedThisCycle){
+    printout("PINCHED");
+    //Falsify the tapping flag to prevent that event
+    isPreparingToTap = false;
+  }
+  if(swipedThisCycle){
+    printout("SWIPED");
+    //Falsify the tapping flag to prevent that event
+    isPreparingToTap = false;
+  }
+
+
+  //After all checks are done if tap preparation is still ongoing AND enough time has passed, BOOM 
+  if(isPreparingToTap && (millis() - lastTapTime >= tapDelay)){
+    
+    //do increments as needed
+    if(preparedTapIncrements[0] > 0){
+      towerPair.initiateIncrementPositive();
+    }
+    if(preparedTapIncrements[1] > 0){
+      towerPair.initiateIncrementNegative();
+    }
+
+    //Bomb defuses after exploding
+    isPreparingToTap = false;
+  }
+}
+
+function resetTouchEvents(){
+  //Reset touch variables 
+  pinchedThisCycle = false;
+  swipedThisCycle = false;
+}
 
 
 

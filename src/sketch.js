@@ -53,6 +53,18 @@ The general strategy is:
 
 TOUCH FUNCTIONS:
 
+1. Tap with n fingers
+2. Swipe Across division Line
+3. Swipe across blocks
+4. Pinch In
+5. Pinch Out
+
+When user touches for pinching and swiping, a trick has to be applied to prevent the automatic registration of a tap.
+This is done by using the function prepareTap() which sets off a timer.
+If a swipe or pinch event is registered within (tapDelay) milliseconds of calling prepareTap, then unprepare the tap.
+If you ever run into issues like swiping or pinching leading to unwanted increments or increments being too delayed,
+try messing around with the value of 'tapDelay'.
+
 */
 
 let currentObjectIndex = -1;
@@ -96,6 +108,7 @@ function draw() {
   
 
   //Interaction
+  triggerTouchEvents();
 
   //Drawing on each side
   towerPair.renderPositive();
@@ -135,5 +148,7 @@ function draw() {
   showDynamicExpression();
 
 
+  //Resetting Anything that needs be reset
+  resetTouchEvents();
 }
 

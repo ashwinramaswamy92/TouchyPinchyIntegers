@@ -1,4 +1,17 @@
 
+//---------------------------- TOUCHSCREEN -----------------------------------//
+
+//Tracking Variables
+let lastTapTime;
+let lastTapSide = 0;  //+1 or -1 depending on which side you tap it
+let isPreparingToTap = false; //Boolean set to true when a tap is registered. Falsified if a swipe or pinch is detected thereafter.
+let preparedTapIncrements = [0, 0]; //2 element array, first one is for positive taps prepped, second is for negative.
+let pinchedThisCycle;
+let swipedThisCycle;
+
+//Constants
+let tapDelay = 300; //Delay in MS before tap is registered
+
 //----------------------------- GRAPHICS --------------------------------------//
 
 let positiveTowerColor;
@@ -23,7 +36,7 @@ let currentlyAnimating = {
   DRAGGING: false
 }
 
-let SPEED = {
+const SPEED = {
   flipping : 0.05,
   disappearing : 25/255,
 }
