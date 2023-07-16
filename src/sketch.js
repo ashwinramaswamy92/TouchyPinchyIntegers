@@ -82,7 +82,6 @@ function setup() {
   canvasContainer = document.getElementById('swipe-container');
   canvas = createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
   canvas.parent(canvasContainer);
-  canvas.position(0, 0); 
 
   //setupColors
   setupColors();
@@ -111,8 +110,6 @@ function draw() {
   renderDividingLine();
 
 
-
-
   //Interaction
   triggerTouchEvents();
 
@@ -121,8 +118,8 @@ function draw() {
   towerPair.renderNegative();
 
   
-  //FOR DEBUGGING: To visualize tap and swipe coordinates 
-  // showTapAndSwipe();
+  //To see tap and swipe coords FOR DEBUGGING
+  //showTapAndSwipe();
 
 
   //Animations and operations
