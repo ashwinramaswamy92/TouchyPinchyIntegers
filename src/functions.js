@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   element.addEventListener('touchstart', function (event) {
     prepareTap(event.touches, element);
-    console.log(event);
+    // console.log(event);
   });
 
     element.addEventListener('touchend', function (event) {
@@ -18,24 +18,24 @@ document.addEventListener('DOMContentLoaded', function () {
   hammertime.on('swipeup', function (event) {
     // console.log(event);
     swipeEndCurrent = event;
-    printout('flip');
+    // printout('flip');
     swipedUpDownThisCycle = true;
   });
   hammertime.on('swipedown', function (event) {
     swipeEndCurrent = event;
-    printout('flip');
+    // printout('flip');
     swipedUpDownThisCycle = true;
   });
 
   hammertime.on('swipeleft', function (event) {
     swipeEndCurrent = event;
-    printout('subtract');
+    // printout('subtract');
     swipedLeftRightThisCycle = true;
   })
 
   hammertime.on('swiperight', function (event) {
     swipeEndCurrent = event;
-    printout('subtract');
+    // printout('subtract');
     swipedLeftRightThisCycle = true;
   })
 
@@ -69,7 +69,7 @@ function prepareTap(touches, container) {
 
   //Record the number of taps: OBSELETE, We WISH TO MOVE TO A 2-d REPRESENTATATION.
   numberOfTaps = touches.length;
-  printout('tapped with ' + numberOfTaps + ' finger(s)');
+  // printout('tapped with ' + numberOfTaps + ' finger(s)');
   touchesStartCurrent = touches;
 
   //Re-initialize tap counter
@@ -106,7 +106,7 @@ function triggerTouchEvents() {
     //Defuse Bomb: Falsify the tapping flag to prevent that event
     isPreparingToTap = false;
 
-    printout("PINCHED IN");
+    // printout("PINCHED IN");
     //Initiate operation
     if(towerPair.canPinchIn())  //check if there's at least one unit each side
       towerPair.initiatePinchIn();
@@ -117,7 +117,7 @@ function triggerTouchEvents() {
     //Defuse Bomb: Falsify the tapping flag to prevent that event
     isPreparingToTap = false;
 
-    printout("PINCHED OUT");
+    // printout("PINCHED OUT");
     //Initiate operation
     towerPair.initiatePinchOut();
 
@@ -127,7 +127,7 @@ function triggerTouchEvents() {
     //Defuse Bomb: Falsify the tapping flag to prevent that event
     isPreparingToTap = false;
 
-    printout("SWIPED TO FLIP");
+    // printout("SWIPED TO FLIP");
     //Initiate operation
     towerPair.initiateFlip(); //NOTE THIS HAS TO BE REWRITTEN TO ACCOUNT FOR DIFFERENT SWIPING ACTIONS.
   }
