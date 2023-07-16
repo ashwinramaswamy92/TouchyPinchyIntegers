@@ -62,6 +62,13 @@ class TowerPair {
     return this.blockSize[1]*hitBoxAccuracy;
   }
 
+  canPinchIn(){
+    if(this.currentPositiveUnits > 0 && this.currentNegativeUnits > 0)
+      return true;
+    else
+      return false;
+  }
+
 
   //---------------------------------ANIMATION + OPERATION INITIATORS--------------------------------------//
 

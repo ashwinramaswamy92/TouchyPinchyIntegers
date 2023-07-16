@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(event);
   });
 
+    element.addEventListener('touchend', function (event) {
+      //Reset pinch blocking when user removes finger
+      blockPinch = false;
+    });
+
   hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
   hammertime.on('swipeup', function (event) {
@@ -33,6 +38,24 @@ document.addEventListener('DOMContentLoaded', function () {
     printout('subtract');
     swipedLeftRightThisCycle = true;
   })
+
+  hammertime.get('pinch').set({ enable: true, threshold: 0.6});
+
+  hammertime.on('pinch', function(event) {
+    //Pinching is blocked if a pinch action has already been registered before user removes their fingers, so one pinch can only lead to one action
+    if(!blockPinch){
+      if (event.scale < 1) {
+        // printout('pinch in');
+        // towerPair.initiatePinchIn();
+        pinchedInThisCycle = true;
+      } else if (event.scale > 1) {
+        // printout('pinch out');
+        // towerPair.initiatePinchOut();
+        pinchedOutThisCycle = true;
+      }
+      blockPinch = true;
+    }
+  });
 });
 
 function prepareTap(touches, container) {
@@ -46,26 +69,34 @@ function prepareTap(touches, container) {
 
   //Record the number of taps: OBSELETE, We WISH TO MOVE TO A 2-d REPRESENTATATION.
   numberOfTaps = touches.length;
-  printout('taped with ' + numberOfTaps + ' finger(s)');
+  printout('tapped with ' + numberOfTaps + ' finger(s)');
   touchesStartCurrent = touches;
 
   //Re-initialize tap counter
   preparedTapIncrements = [0, 0];
+  let allPositive = true;
+  let allNegative = true;
   //Decode from position of each tap the side at which an increment must occur.
   for (let i = 0; i < touches.length; i++) {
     if (touches[i].clientY < (container.offsetHeight / 2)) {
       //This tap detected on top side, so prepare one more positive increment
       preparedTapIncrements[0] += 1;
+      allNegative = false;
     } else {
       //This tap detected on bottom side, so prepare one more negative increment
       preparedTapIncrements[1] += 1;
+      allPositive = false;
     }
+  }
+
+  if (!allNegative && !allPositive){
+    preparedTapIncrements = [0, 0];
   }
 }
 
 function printout(myText) {
   var messageElement = document.getElementById('message');
-  messageElement.textContent = myText;
+  messageElement.textContent += myText;
 }
 
 
@@ -77,6 +108,8 @@ function triggerTouchEvents() {
 
     printout("PINCHED IN");
     //Initiate operation
+    if(towerPair.canPinchIn())  //check if there's at least one unit each side
+      towerPair.initiatePinchIn();
 
   }
 
@@ -86,6 +119,7 @@ function triggerTouchEvents() {
 
     printout("PINCHED OUT");
     //Initiate operation
+    towerPair.initiatePinchOut();
 
   }
 
@@ -132,6 +166,7 @@ function triggerTouchEvents() {
 function resetTouchEvents() {
   //Reset touch variables 
   pinchedInThisCycle = false;
+  pinchedOutThisCycle = false;
   swipedUpDownThisCycle = false;
   swipedLeftRightThisCycle = false;
 }
@@ -231,7 +266,7 @@ function computeSubtrahend() {
 
 function showDynamicExpression(x = width * 1 / 20, y = height * 1 / 3) {
   textSize(expressionTextSize);
-  let expressionString = towerPair.currentPositiveUnits + " + (-" + towerPair.currentNegativeUnits + ") = ?"
+  let expressionString = towerPair.currentPositiveUnits + " + (-" + towerPair.currentNegativeUnits + ") "
   text(expressionString, x, y);
 }
 
