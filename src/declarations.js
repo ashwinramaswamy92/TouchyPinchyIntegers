@@ -12,6 +12,9 @@ let pinchedOutThisCycle;
 let swipedUpDownThisCycle;
 let swipedLeftRightThisCycle;
 
+let lastPinchedTime;    //To prevent multiple simultaneous Pinches
+let blockPinch = false; //Boolean that controls whether one ought to pinch
+
 //Constants
 const tapDelay = 300; //Delay in MS before tap is registered
 const hitBoxAccuracy = 2/3;
