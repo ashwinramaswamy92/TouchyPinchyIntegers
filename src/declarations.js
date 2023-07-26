@@ -26,7 +26,10 @@ let swipeHits = [];
 
 let positiveTowerColor;
 let negativeTowerColor;
-let expressionColor;
+let newPositiveBlockFill;
+let newNegativeBlockFill;
+let dividingLineColor;
+let theBlockSize = 40;
 
 let expressionTextSize = 28;
 
@@ -47,6 +50,7 @@ let currentlyAnimating = {
 }
 
 const SPEED = {
+  incrementing: 25,
   flipping : 0.05,
   disappearing : 25/255,
 }

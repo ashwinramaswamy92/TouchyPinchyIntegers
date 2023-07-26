@@ -106,8 +106,9 @@ function draw() {
 
 
 
-  //Draw line across screen
+  //Draw lines across screen
   renderDividingLine();
+  renderGrid();
 
 
   //Interaction
