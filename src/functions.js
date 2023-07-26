@@ -46,11 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if(!blockPinch){
       if (event.scale < 1) {
         // printout('pinch in');
-        // towerPair.initiatePinchIn();
         pinchedInThisCycle = true;
       } else if (event.scale > 1) {
         // printout('pinch out');
-        // towerPair.initiatePinchOut();
         pinchedOutThisCycle = true;
       }
       blockPinch = true;
@@ -91,6 +89,9 @@ function prepareTap(touches, container) {
 
   if (!allNegative && !allPositive){
     preparedTapIncrements = [0, 0];
+    blockPinch = false;
+  } else {
+    blockPinch = true;
   }
 }
 
@@ -266,11 +267,13 @@ function computeSubtrahend() {
 
 //--------------------- SCOREKEEPING/EXPRESSION RENDERING -----------------------------------------//
 
-function showDynamicExpression(x = width * 1 / 20, y = height/2 - 2*theBlockSize) {
-  stroke(0)
+function showDynamicExpression(x = width * 14 / 20, y = height/2 - 2*theBlockSize) {
+  stroke(150)
   strokeWeight(1)
   // noStroke()
-  textFont('Helvetica');
+  // textFont('Helvetica');
+  
+  textFont(fancyFont)
   textSize(expressionTextSize);
   textAlign(LEFT, BOTTOM);
 
@@ -299,9 +302,10 @@ function renderGrid(){
 
   let numberOfGridLines = Math.ceil((height/2)/theBlockSize);
   let numberFontSize = expressionTextSize/2;
-  let textX = width/2 + theBlockSize;
+  let textX = width/2 - theBlockSize;
 
   stroke(0);
+  fill(0);
   strokeWeight(0.1);
   textSize(numberFontSize);
   textAlign(CENTER, CENTER);
@@ -320,8 +324,28 @@ function renderGrid(){
     //Now write the number
     text(-i, textX, negativeLineY);
   }
-  //Mark the zero also now
+
+  //MARKING NUMBERS
+  
+  // let textX = width/2 - theBlockSize;
+
+  stroke(0);
+  textSize(numberFontSize);
+  textAlign(CENTER, CENTER);
+  
+  //Mark the zero
   text(0, textX, height/2);
+
+  // //Mark until currentPositiveUnits or currentNegativeUnits on each side
+
+  // for(i = 1; i <= towerPair.currentPositiveUnits; i++){
+
+  // }
+
+  // for(i = 1; i <= towerPair.currentNegativeUnits; i++){
+    
+  // }
+
 }
 
 
@@ -347,7 +371,8 @@ function setupColors() {
   newPositiveBlockFill = color(255, 175, 204);
   newNegativeBlockFill = color(189, 224, 254);
 
-  dividingLineColor = color(131, 105, 83);
+  // dividingLineColor = color(131, 105, 83);
+  dividingLineColor = color(0, 100);
 }
 
 
