@@ -3,7 +3,7 @@ class TowerPair {
     this.objectId = 0;
     this.currentPositiveUnits = 0;
     this.currentNegativeUnits = 0;
-    this.blockSize = [40, 40];
+    this.blockSize = [theBlockSize, theBlockSize];
     this.position = [0, 0];     //The midpoint of the intersection base of both towers.
     this.time = 0;
     this.dragOffset = [0, 0];
@@ -29,41 +29,41 @@ class TowerPair {
 
   //-------------------------------------------- GETTERS --------------------------------------//
 
-  getBlockHeadTargetPositions(){
+  getBlockHeadTargetPositions() {
     //Returns a object containing x and y of subtraction target of each block of each side.
     let positiveArray = [];
     let negativeArray = [];
 
-    for (let i = 0; i < this.currentPositiveUnits; i++){
+    for (let i = 0; i < this.currentPositiveUnits; i++) {
       let point = {
-        x : this.position[0],
-        y : this.position[1] - (i + 1)*this.blockSize[1]
+        x: this.position[0],
+        y: this.position[1] - (i + 1) * this.blockSize[1]
       }
       positiveArray.push(point);
     }
-    
-    for (let i = 0; i < this.currentNegativeUnits; i++){
+
+    for (let i = 0; i < this.currentNegativeUnits; i++) {
       let point = {
-        x : this.position[0],
-        y : this.position[1] + (i + 1)*this.blockSize[1]
+        x: this.position[0],
+        y: this.position[1] + (i + 1) * this.blockSize[1]
       }
       negativeArray.push(point);
     }
 
     let returnObject = {
-      positive : positiveArray,
-      negative : negativeArray
+      positive: positiveArray,
+      negative: negativeArray
     }
     return returnObject;
   }
 
-  getHitBoxRadius(){
+  getHitBoxRadius() {
     //Returns the computed radius of the hitbox for subtraction based on block size
-    return this.blockSize[1]*hitBoxAccuracy;
+    return this.blockSize[1] * hitBoxAccuracy;
   }
 
-  canPinchIn(){
-    if(this.currentPositiveUnits > 0 && this.currentNegativeUnits > 0)
+  canPinchIn() {
+    if (this.currentPositiveUnits > 0 && this.currentNegativeUnits > 0)
       return true;
     else
       return false;
@@ -115,10 +115,14 @@ class TowerPair {
 
     //Animation part: animates appearance of a single block by increasing its alpha:
     let startXY = [this.position[0] - this.blockSize[0] / 2, this.position[1] - this.blockSize[1]];
-    this.newPositiveBlockAlpha += 25;     //The main animating step
+    this.newPositiveBlockAlpha += SPEED.incrementing;     //The main animating step
     stroke(0, this.newPositiveBlockAlpha);
     strokeWeight(2);
-    fill(255, 0, 0, this.newPositiveBlockAlpha);
+
+    //Manipulating alpha but with a local color object so that other block alphas are unaffected
+    newPositiveBlockFill.setAlpha(this.newPositiveBlockAlpha)
+    fill(newPositiveBlockFill);
+
     for (let i = 0; i < preparedTapIncrements[0]; i++) {
       rect(startXY[0], startXY[1] - ((i + this.currentPositiveUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
     }
@@ -134,16 +138,21 @@ class TowerPair {
   }
 
 
-  incrementNegative() {    
+  incrementNegative() {
     //To be called continuously in draw under a control structure. While the primary purpose of this function is to increment this.currentNegativeUnits, we could transition into this state via an animation.
     //preparedTapIncrements[1] is a global that stores the number of negative taps prepared.
 
     //Animation part: animates appearance of a single block by increasing its alpha:
     let startXY = [this.position[0] - this.blockSize[0] / 2, this.position[1]];
-    this.newNegativeBlockAlpha += 25;     //The main animating step
+    this.newNegativeBlockAlpha += SPEED.incrementing;     //The main animating step
+
     stroke(0, this.newNegativeBlockAlpha);
     strokeWeight(2);
-    fill(0, 0, 255, this.newNegativeBlockAlpha);
+
+    //Manipulating alpha but with a local color object so that other block alphas are unaffected
+    newNegativeBlockFill.setAlpha(this.newNegativeBlockAlpha)
+    fill(newNegativeBlockFill);
+
     for (let i = 0; i < preparedTapIncrements[1]; i++) {
       rect(startXY[0], startXY[1] + ((i + this.currentNegativeUnits) * this.blockSize[1]), this.blockSize[0], this.blockSize[1]);
     }

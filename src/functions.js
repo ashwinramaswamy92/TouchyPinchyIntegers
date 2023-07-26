@@ -240,7 +240,8 @@ function computeSubtrahend() {
       //Check if the dart is within the target using distance formula and circle interior relationship
       if (sq(dartXY[0] - targetXY[0]) + sq(dartXY[1] - targetXY[1]) <= sq(radius)) {
         //HIT!
-        console.log("MUST SUBTRACT " + (i + 1));
+
+        // console.log("MUST SUBTRACT " + (i + 1));
         return i + 1;
       }
     }
@@ -254,7 +255,8 @@ function computeSubtrahend() {
       //Check if the dart is within the target using distance formula and circle interior relationship
       if (sq(dartXY[0] - targetXY[0]) + sq(dartXY[1] - targetXY[1]) <=  sq(radius)) {
         //HIT!
-        console.log("MUST SUBTRACT " + (i + 1));
+        
+        // console.log("MUST SUBTRACT " + (i + 1));
         return -1*(i + 1);
       }
     }
@@ -264,8 +266,14 @@ function computeSubtrahend() {
 
 //--------------------- SCOREKEEPING/EXPRESSION RENDERING -----------------------------------------//
 
-function showDynamicExpression(x = width * 1 / 20, y = height * 1 / 3) {
+function showDynamicExpression(x = width * 1 / 20, y = height/2 - 2*theBlockSize) {
+  stroke(0)
+  strokeWeight(1)
+  // noStroke()
+  textFont('Helvetica');
   textSize(expressionTextSize);
+  textAlign(LEFT, BOTTOM);
+
   let expressionString = towerPair.currentPositiveUnits + " + (-" + towerPair.currentNegativeUnits + ") "
   text(expressionString, x, y);
 }
@@ -282,19 +290,38 @@ function renderDividingLine() {
 
   //Main rod
   noStroke();
-  fill(110, 50, 50)
+  fill(dividingLineColor)
   // line(0, height / 2, width, height / 2);
   rect(0, startY, width, dividerSize);
+}
 
-  // //gratings
-  // n = 4;
-  // let intervalSize = dividerSize/n;
-  // for(let i = 0; i < n; i++){
-  //   strokeWeight(1)
-  //   stroke(0);
-  //   let thisLineY = startY + i*intervalSize;
-  //   line(0, thisLineY, width, thisLineY);
-  // }
+function renderGrid(){
+
+  let numberOfGridLines = Math.ceil((height/2)/theBlockSize);
+  let numberFontSize = expressionTextSize/2;
+  let textX = width/2 + theBlockSize;
+
+  stroke(0);
+  strokeWeight(0.1);
+  textSize(numberFontSize);
+  textAlign(CENTER, CENTER);
+
+  for(i = 1; i <= numberOfGridLines; i++){
+    //Draw grid lines on positive side of the dividing line
+    let positiveLineY = height/2 - i*theBlockSize;
+    line(0, positiveLineY, width, positiveLineY);
+    //Now write the number
+    text(i, textX, positiveLineY);
+  
+    
+    //Draw grid lines on negative side of the dividing line
+    let negativeLineY = height/2 + i*theBlockSize;
+    line(0, negativeLineY, width, negativeLineY);
+    //Now write the number
+    text(-i, textX, negativeLineY);
+  }
+  //Mark the zero also now
+  text(0, textX, height/2);
 }
 
 
@@ -314,10 +341,13 @@ function preventDefaultTouchEvents() {
 }
 
 function setupColors() {
-  positiveTowerColor = color(255, 0, 0);
-  negativeTowerColor = color(0, 0, 255);
+  positiveTowerColor = color(255, 175, 204);
+  negativeTowerColor = color(189, 224, 254);
+  
+  newPositiveBlockFill = color(255, 175, 204);
+  newNegativeBlockFill = color(189, 224, 254);
 
-  expressionColor = color(0, 255, 0);
+  dividingLineColor = color(131, 105, 83);
 }
 
 
@@ -434,15 +464,15 @@ function touchStarted() {
 
 }
 
-function touchMoved() {
-  dragObject.drag(mouseX, mouseY);
-}
+// function touchMoved() {
+//   dragObject.drag(mouseX, mouseY);
+// }
 
-function touchEnded() {
-  currentlyAnimating.DRAGGING = false;
-}
+// function touchEnded() {
+//   currentlyAnimating.DRAGGING = false;
+// }
 
-function moveObject() {
+// function moveObject() {
 
-}
+// }
 
