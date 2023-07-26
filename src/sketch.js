@@ -75,6 +75,12 @@ let towerPair = new TowerPair();
 
 let canvasContainer;
 let canvas;
+let fancyFont;
+
+
+function preload() {
+  fancyFont = loadFont('./fonts/Motley.ttf');
+}
 
 function setup() {
 
@@ -101,7 +107,7 @@ function setup() {
 }
 
 function draw() {
-  background(230);
+  background(255);
 
 
 
