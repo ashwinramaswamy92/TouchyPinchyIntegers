@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     swipedLeftRightThisCycle = true;
   })
 
-  hammertime.get('pinch').set({ enable: true, threshold: 0.6});
+  hammertime.get('pinch').set({ enable: true, threshold: pinchThreshold});
 
   hammertime.on('pinch', function(event) {
     //Pinching is blocked if a pinch action has already been registered before user removes their fingers, so one pinch can only lead to one action

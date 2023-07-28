@@ -18,10 +18,10 @@ let blockPinch = false; //Boolean that controls whether one ought to pinch
 let swipeHits = []; //Array of coordinate arrays - stores downsampled swipe trajectory points' XY
 
 //Constants
-const tapDelay = 300; //Delay in MS before tap is registered
-const hitBoxAccuracy = 2/3;
-const swipeHitResolution = 50; //Number of points interpolated between start and end of swipe for which we check hitbox
-
+const tapDelay = 425; //Delay in MS before tap is registered
+const hitBoxAccuracy = 0.8;
+const swipeHitResolution = 80; //Number of points interpolated between start and end of swipe for which we check hitbox
+const pinchThreshold = 0.7;
 
 //----------------------------- GRAPHICS --------------------------------------//
 
