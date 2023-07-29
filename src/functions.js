@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   hammertime.on('pinch', function(event) {
     //Pinching is blocked if a pinch action has already been registered before user removes their fingers, so one pinch can only lead to one action
-    if(!blockPinch){
+    if(!blockPinch && !attemptingSameSidePinch){
       if (event.scale < 1) {
         // printout('pinch in');
         pinchedInThisCycle = true;
@@ -89,9 +89,9 @@ function prepareTap(touches, container) {
 
   if (!allNegative && !allPositive){
     preparedTapIncrements = [0, 0];
-    blockPinch = false;
+    attemptingSameSidePinch = false;
   } else {
-    blockPinch = true;
+    attemptingSameSidePinch = true;
   }
 }
 

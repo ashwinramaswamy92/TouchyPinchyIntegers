@@ -88,7 +88,6 @@ function setup() {
   canvasContainer = document.getElementById('swipe-container');
   canvas = createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
   canvas.parent(canvasContainer);
-
   //setupColors
   setupColors();
 
@@ -102,15 +101,16 @@ function setup() {
   //Listening for touch events and preventing the default behaviors - scrolling, screenshot, etc.
   preventDefaultTouchEvents();
 
+  //Setup modes
+  ellipseMode(RADIUS);
+
+
   //While debugging/developing
   // setupOperatorButtons();
 }
 
 function draw() {
   background(245);
-
-
-
 
   //Draw lines across screen
   renderDividingLine();
@@ -126,7 +126,7 @@ function draw() {
 
   
   //To see tap and swipe coords FOR DEBUGGING
-  //showTapAndSwipe();
+  // showTapAndSwipe();
 
 
   //Animations and operations
