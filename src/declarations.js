@@ -24,6 +24,7 @@ const hitBoxAccuracy = 0.5;
 const swipeHitResolution = 60; //Number of points interpolated between start and end of swipe for which we check hitbox
 const pinchThreshold = 0.7;
 
+
 //----------------------------- GRAPHICS --------------------------------------//
 
 let positiveTowerColor;
