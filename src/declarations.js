@@ -14,14 +14,16 @@ let swipedLeftRightThisCycle;
 
 let lastPinchedTime;    //To prevent multiple simultaneous Pinches
 let blockPinch = false; //Boolean that controls whether one ought to pinch
+let attemptingSameSidePinch = false;   //Similar to blockPinch, but distinct to avoid unexpected interactions.
 
 let swipeHits = []; //Array of coordinate arrays - stores downsampled swipe trajectory points' XY
 
 //Constants
 const tapDelay = 425; //Delay in MS before tap is registered
-const hitBoxAccuracy = 0.8;
-const swipeHitResolution = 80; //Number of points interpolated between start and end of swipe for which we check hitbox
-const pinchThreshold = 0.7
+const hitBoxAccuracy = 0.5;
+const swipeHitResolution = 60; //Number of points interpolated between start and end of swipe for which we check hitbox
+const pinchThreshold = 0.7;
+
 
 //----------------------------- GRAPHICS --------------------------------------//
 
