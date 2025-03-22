@@ -187,6 +187,8 @@ class TowerPair {
       this.flipFactor = 1;
       //Terminate function calls
       currentlyAnimating.FLIPPING = false;
+
+      sendDataToBackend("Flipped");
     }
   }
 
