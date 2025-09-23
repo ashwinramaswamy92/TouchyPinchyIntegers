@@ -513,10 +513,19 @@ function sendDataToBackend(action) {
 
   window.addDoc(window.collection(window.db, "interactions"), {
       event: action,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      username: username,
+      currentPositiveUnits: towerPair.currentPositiveUnits,
+      currentNegativeUnits: towerPair.currentNegativeUnits
   }).then(() => {
       console.log("Data logged successfully!");
   }).catch(error => {
       console.error("Error logging data:", error);
   });
+}
+
+
+function resetUserData(){
+  // Add any code for resetting the user's data here
+
 }

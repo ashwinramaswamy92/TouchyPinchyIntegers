@@ -1,3 +1,4 @@
+let hasSetupStarted = false; // Flag to track whether the sketch.js has entered setup().
 
 //---------------------------- TOUCHSCREEN -----------------------------------//
 
@@ -76,4 +77,5 @@ let swipeEndCurrent;
 const database = window.database;
 const ref = window.ref;
 const firebasePush = window.firebasePush;
+
 

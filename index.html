@@ -19,6 +19,7 @@
 
 <body>
   <!-- For Firebase Integration -->
+
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -51,9 +52,42 @@
     window.addDoc = addDoc;
   </script>
 
+  <!-- DOM ELEMENTS -->
+  <!-- Registration Overlay -->
+  <div id="registrationOverlay" class="registration-overlay">
+    <div class="registration-box">
+      <!-- Password Screen -->
+      <div id="passwordScreen">
+        <h1 class="registration-title">🔐 Instructor Access</h1>
+        <input type="password" id="passwordInput" class="password-input">
+        <div id="errorMessage" class="error-message"></div>
+        <button id="passwordBtn" class="password-btn">Submit Password</button>
+        <button id="guestBtn" class="guest-btn">Play as Guest 👻</button>
+      </div>
 
+      <!-- Username Screen -->
+      <div id="usernameScreen">
+        <h1 class="registration-title">Enter Student Name</h1>
+        <input type="text" id="usernameInput" class="username-input" placeholder="Your username..." maxlength="20">
+        <div id="errorMessage" class="error-message"></div>
+        <button id="submitBtn" class="submit-btn">Start!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons">
+    <button id="resetBtn" class="control-btn reset-btn" title="Reset Game">🔄</button>
+  </div>
+
+  <div class="control-buttons-bottom">
+    <button id="showRegisterBtn" class="control-btn register-btn" title="Change Name">👤</button>
+  </div>
+
+  <!-- SWIPE CONTAINER -->
   <div id="swipe-container"></div>
   <p id="message"></p>
+  <script src="src/handleDOM.js"></script>
   <script src="src/sketch.js"></script>
 
 </body>
