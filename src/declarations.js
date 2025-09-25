@@ -1,3 +1,4 @@
+let hasSetupStarted = false; // Flag to track whether the sketch.js has entered setup().
 
 //---------------------------- TOUCHSCREEN -----------------------------------//
 
@@ -67,3 +68,14 @@ let numberOfTaps;
 
 let touchesStartCurrent;
 let swipeEndCurrent;
+
+
+//--------------------- integrating backend -------------------------//
+
+// Initialize Firebase
+// const firebaseConfig = { /* Your Firebase Config */ };
+const database = window.database;
+const ref = window.ref;
+const firebasePush = window.firebasePush;
+
+

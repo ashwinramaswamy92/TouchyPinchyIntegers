@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function prepareTap(touches, container) {
-
+  
   //Set off a 'time bomb' for taps and records the time.
   isPreparingToTap = true;
   lastTapTime = millis();
@@ -297,7 +297,7 @@ function renderDividingLine() {
   // line(0, height / 2, width, height / 2);
   rect(0, startY, width, dividerSize);
 }
-
+    
 function renderGrid(){
 
   let numberOfGridLines = Math.ceil((height/2)/theBlockSize);
@@ -501,3 +501,36 @@ function touchStarted() {
 
 // }
 
+
+// ---------------BACKEND INTEGRATION-----------------------//
+
+
+function sendDataToBackend(action) {
+    const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
+  
+  const environment = isLocal ? 'development' : 'production';
+
+  if (!window.db || !window.collection || !window.addDoc) {
+      console.error("Firestore not initialized.");
+      return;
+  }
+
+  window.addDoc(window.collection(window.db, "interactions"), {
+      event: action,
+      timestamp: new Date().toISOString(),
+      username: username,
+      currentPositiveUnits: towerPair.currentPositiveUnits,
+      currentNegativeUnits: towerPair.currentNegativeUnits,
+      environment: environment
+  }).then(() => {
+      console.log("Data logged successfully!");
+  }).catch(error => {
+      console.error("Error logging data:", error);
+  });
+}
+
+
+function resetUserData(){
+  // Add any code for resetting the user's data here
+
+}

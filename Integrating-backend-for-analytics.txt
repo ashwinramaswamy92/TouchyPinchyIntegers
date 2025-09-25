@@ -1,0 +1,4 @@
+22-03-2025
+
+This file aims to document the process of integraging a backend for this project, so that it may be replicated to other designs as needed.
+For the time being consult the commit titled "set up Firebase backend" for the specific changes.

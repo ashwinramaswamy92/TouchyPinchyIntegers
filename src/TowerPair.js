@@ -18,6 +18,37 @@ class TowerPair {
   }
 
 
+  //--------------------------------------------RESETTER-----------------------------------------//
+
+  reset() {
+    // Resetting State
+    this.currentPositiveUnits = 0;
+    this.currentNegativeUnits = 0;
+
+    preparedTapIncrements = [0, 0]; //Not doing this can cause timing issues 
+    // if taps are being prepared (in the middle of incrementation animation) and you reset, you'll still get an increment without this.
+
+
+    // Resetting Animation States
+    this.newPositiveBlockAlpha = 0;
+    this.newNegativeBlockAlpha = 0;
+    this.positiveTowerAlpha = 255;
+    this.negativeTowerAlpha = 255;
+    this.fractionDisappeared = 0; //Tracks how far into the (dis)appearing animation of a block we are, as a fraction of 1.
+    this.flipFactor = 1; //To be implemented as scale(1, flipFactor) in a transformation matrix during rendering.
+
+    // Resetting global animation flags
+    for (const flag in currentlyAnimating) {
+      if (currentlyAnimating.hasOwnProperty(flag)) {
+        console.log(`${flag} was ${currentlyAnimating[flag]}`)
+        currentlyAnimating[flag] = false;
+        console.log(`${flag} is now ${currentlyAnimating[flag]}`)
+      }
+    }
+    
+    sendDataToBackend("RESET");
+  }
+
 
 
   //--------------------------------------------SETTERS-----------------------------------------//
@@ -134,6 +165,7 @@ class TowerPair {
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_POSITIVE = false; //Stop calling this function in draw()
       this.newPositiveBlockAlpha = 0;   //Reset all animation state variables to allow future animations
+      sendDataToBackend("Added " + preparedTapIncrements[0]);
     }
   }
 
@@ -165,6 +197,7 @@ class TowerPair {
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_NEGATIVE = false;
       this.newNegativeBlockAlpha = 0;
+      sendDataToBackend("Added " + preparedTapIncrements[1]);
     }
   }
 
@@ -187,6 +220,8 @@ class TowerPair {
       this.flipFactor = 1;
       //Terminate function calls
       currentlyAnimating.FLIPPING = false;
+
+      sendDataToBackend("Flipped");
     }
   }
 
@@ -217,6 +252,7 @@ class TowerPair {
 
       //break out of calling the method in draw()
       currentlyAnimating.PINCHING_IN = false;
+      sendDataToBackend("Pinched In");
     }
   }
 
@@ -247,9 +283,8 @@ class TowerPair {
 
       //break out of calling the method in draw()
       currentlyAnimating.PINCHING_OUT = false;
+      sendDataToBackend("Pinched Out");
     }
-
-
   }
 
   subtract(subtrahend) {
@@ -294,8 +329,8 @@ class TowerPair {
       this.fractionDisappeared = 0;
       //break out of calling the method in draw()
       currentlyAnimating.SUBTRACTING = false;
+      sendDataToBackend("Subtracted " + subtrahend);
     }
-
   }
 
   multiplyPositive(multiplicand) {
