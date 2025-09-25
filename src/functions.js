@@ -506,6 +506,10 @@ function touchStarted() {
 
 
 function sendDataToBackend(action) {
+    const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
+  
+  const environment = isLocal ? 'development' : 'production';
+
   if (!window.db || !window.collection || !window.addDoc) {
       console.error("Firestore not initialized.");
       return;
@@ -516,7 +520,8 @@ function sendDataToBackend(action) {
       timestamp: new Date().toISOString(),
       username: username,
       currentPositiveUnits: towerPair.currentPositiveUnits,
-      currentNegativeUnits: towerPair.currentNegativeUnits
+      currentNegativeUnits: towerPair.currentNegativeUnits,
+      environment: environment
   }).then(() => {
       console.log("Data logged successfully!");
   }).catch(error => {
