@@ -46,7 +46,7 @@ class TowerPair {
       }
     }
     
-    sendDataToBackend("RESET");
+    sendActionDataToBackend("RESET");
   }
 
 
@@ -165,7 +165,7 @@ class TowerPair {
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_POSITIVE = false; //Stop calling this function in draw()
       this.newPositiveBlockAlpha = 0;   //Reset all animation state variables to allow future animations
-      sendDataToBackend("Added " + preparedTapIncrements[0]);
+      sendActionDataToBackend("Added " + preparedTapIncrements[0]);
     }
   }
 
@@ -197,7 +197,7 @@ class TowerPair {
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_NEGATIVE = false;
       this.newNegativeBlockAlpha = 0;
-      sendDataToBackend("Added " + preparedTapIncrements[1]);
+      sendActionDataToBackend("Added " + preparedTapIncrements[1]);
     }
   }
 
@@ -221,7 +221,7 @@ class TowerPair {
       //Terminate function calls
       currentlyAnimating.FLIPPING = false;
 
-      sendDataToBackend("Flipped");
+      sendActionDataToBackend("Flipped");
     }
   }
 
@@ -252,7 +252,7 @@ class TowerPair {
 
       //break out of calling the method in draw()
       currentlyAnimating.PINCHING_IN = false;
-      sendDataToBackend("Pinched In");
+      sendActionDataToBackend("Pinched In");
     }
   }
 
@@ -283,7 +283,7 @@ class TowerPair {
 
       //break out of calling the method in draw()
       currentlyAnimating.PINCHING_OUT = false;
-      sendDataToBackend("Pinched Out");
+      sendActionDataToBackend("Pinched Out");
     }
   }
 
@@ -329,7 +329,7 @@ class TowerPair {
       this.fractionDisappeared = 0;
       //break out of calling the method in draw()
       currentlyAnimating.SUBTRACTING = false;
-      sendDataToBackend("Subtracted " + subtrahend);
+      sendActionDataToBackend("Subtracted " + subtrahend);
     }
   }
 

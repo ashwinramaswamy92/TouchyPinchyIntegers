@@ -1,13 +1,14 @@
 html,
 body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #swipe-container {
-  width: 100vw;
-  height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
+
 /* Custom Font */
 @font-face {
     font-family: 'Motley';
@@ -36,7 +37,7 @@ body {
     background: linear-gradient(135deg, #e6f2ff, #f0f8ff);
     padding: 2.5rem;
     border-radius: 25px;
-    box-shadow: 
+    box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.1),
         0 5px 15px rgba(162, 210, 255, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -64,11 +65,13 @@ body {
     color: #2a6f97;
     font-size: 2rem;
     margin-bottom: 1.5rem;
+    font-family: 'Motley', cursive;
     text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.8);
     letter-spacing: 1px;
 }
 
-.password-input, .username-input {
+.password-input,
+.username-input {
     width: 100%;
     padding: 14px;
     border: 2px solid #bde0fe;
@@ -77,19 +80,22 @@ body {
     text-align: center;
     margin-bottom: 1.2rem;
     box-sizing: border-box;
-    font-family: 'Motley', cursive;
+    font-family: cursive;
     outline: none;
     background: rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
 }
 
-.password-input:focus, .username-input:focus {
+.password-input:focus,
+.username-input:focus {
     border-color: #2a6f97;
     box-shadow: 0 0 15px rgba(42, 111, 151, 0.2);
     transform: translateY(-2px);
 }
 
-.password-btn, .submit-btn, .guest-btn {
+.password-btn,
+.submit-btn,
+.guest-btn {
     padding: 14px 35px;
     border: none;
     border-radius: 50px;
@@ -101,14 +107,16 @@ body {
     font-family: 'Motley', cursive;
     position: relative;
     overflow: hidden;
-    box-shadow: 
+    box-shadow:
         0 6px 0 #2a6f97,
         0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.password-btn:active, .submit-btn:active, .guest-btn:active {
+.password-btn:active,
+.submit-btn:active,
+.guest-btn:active {
     transform: translateY(4px);
-    box-shadow: 
+    box-shadow:
         0 2px 0 #2a6f97,
         0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -132,8 +140,8 @@ body {
 /* Control Buttons */
 .control-buttons {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    bottom: 10px;
+    left: 5px;
     z-index: 500;
 }
 
@@ -155,7 +163,7 @@ body {
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
-    box-shadow: 
+    box-shadow:
         0 5px 0 #2a6f97,
         0 8px 15px rgba(0, 0, 0, 0.1);
     outline: none;
@@ -164,7 +172,7 @@ body {
 
 .control-btn:active {
     transform: translateY(4px);
-    box-shadow: 
+    box-shadow:
         0 1px 0 #2a6f97,
         0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -174,10 +182,11 @@ body {
     color: #8b5a00;
 }
 
-.register-btn {
+/* .register-btn {
     background: linear-gradient(45deg, #a2d2ff, #bde0fe);
     color: #2a6f97;
-}
+    
+} */
 
 /* Screen-specific styling */
 #passwordScreen {
@@ -187,6 +196,8 @@ body {
 
 #usernameScreen {
     display: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .error-message {
@@ -195,4 +206,154 @@ body {
     margin-top: -0.8rem;
     margin-bottom: 1rem;
     min-height: 1.2rem;
+}
+
+.registration-prompt {
+    font-family: 'Motley', cursive;
+}
+
+/* .usernameInput{
+    
+} */
+
+/* Problem Number Display */
+.problem-display-container {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    padding: 0;
+}
+
+.problem-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.problem-text {
+    font-family: 'Motley', cursive, sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: bold;
+    color: #2a6f97;
+    text-shadow: 
+        2px 2px 0px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(162, 210, 255, 0.4);
+}
+
+.problem-number-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.problem-number-main {
+    font-family: 'Motley', cursive, sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: bold;
+    color: #2a6f97;
+    text-shadow: 
+        2px 2px 0px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(162, 210, 255, 0.4);
+    width: 60px; /* Fixed width for 2 digits */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, #e6f2ff, #f0f8ff);
+    border-radius: 12px;
+    border: 2px solid #a2d2ff;
+    box-shadow: 
+        0 4px 15px rgba(42, 111, 151, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.problem-arrow {
+    width: 25px;
+    height: 18px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #a2d2ff, #bde0fe);
+    color: #2a6f97;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 3px 0 #2a6f97,
+        0 4px 8px rgba(0, 0, 0, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.problem-arrow:active {
+    transform: translateY(2px);
+    box-shadow: 
+        0 1px 0 #2a6f97,
+        0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.problem-reset-btn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #66ffab, #69ff66);
+    color: #023a1b;
+    font-family: 'Motley', cursive, sans-serif;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 4px 0 #015c2a,
+        0 6px 12px rgba(0, 0, 0, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.problem-reset-btn:active {
+    transform: translateY(3px);
+    box-shadow: 
+        0 1px 0 #cc8800,
+        0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .problem-display-container {
+        top: 5px;
+        right: 5px;
+    }
+    
+    .problem-text, .problem-number-main {
+        font-size: clamp(1.2rem, 5vw, 1.6rem);
+    }
+    
+    .problem-number-main {
+        width: 30px;
+        height: 20px;
+    }
+    
+    .problem-arrow {
+        width: 26px;
+        height: 20px;
+        font-size: 0.7rem;
+    }
+    
+    .problem-reset-btn {
+        width: 15px;
+        height: 15px;
+        font-size: 1.1rem;
+    }
 }

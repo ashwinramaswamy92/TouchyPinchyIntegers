@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // console.log(event);
   });
 
-    element.addEventListener('touchend', function (event) {
-      //Reset pinch blocking when user removes finger
-      blockPinch = false;
-    });
+  element.addEventListener('touchend', function (event) {
+    //Reset pinch blocking when user removes finger
+    blockPinch = false;
+  });
 
   hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
@@ -20,36 +20,51 @@ document.addEventListener('DOMContentLoaded', function () {
     swipeEndCurrent = event;
     // printout('flip');
     swipedUpDownThisCycle = true;
+
+    storedTouches.upDownSwipe = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
   });
   hammertime.on('swipedown', function (event) {
     swipeEndCurrent = event;
     // printout('flip');
     swipedUpDownThisCycle = true;
+
+    storedTouches.upDownSwipe = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
   });
 
   hammertime.on('swipeleft', function (event) {
     swipeEndCurrent = event;
     // printout('subtract');
     swipedLeftRightThisCycle = true;
+
+    storedTouches.sideSwipe = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
+
   })
 
   hammertime.on('swiperight', function (event) {
     swipeEndCurrent = event;
     // printout('subtract');
     swipedLeftRightThisCycle = true;
+
+    storedTouches.sideSwipe = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
+
   })
 
-  hammertime.get('pinch').set({ enable: true, threshold: pinchThreshold});
+  hammertime.get('pinch').set({ enable: true, threshold: pinchThreshold });
 
-  hammertime.on('pinch', function(event) {
+  hammertime.on('pinch', function (event) {
     //Pinching is blocked if a pinch action has already been registered before user removes their fingers, so one pinch can only lead to one action
-    if(!blockPinch && !attemptingSameSidePinch){
+    if (!blockPinch && !attemptingSameSidePinch) {
       if (event.scale < 1) {
         // printout('pinch in');
         pinchedInThisCycle = true;
+
+        storedTouches.pinchIn = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
+
       } else if (event.scale > 1) {
         // printout('pinch out');
         pinchedOutThisCycle = true;
+
+        storedTouches.pinchOut = event.touches;  // Updating stored touch data, so it could be sent to backend if the action is triggered downstream.
       }
       blockPinch = true;
     }
@@ -57,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function prepareTap(touches, container) {
-  
+
   //Set off a 'time bomb' for taps and records the time.
   isPreparingToTap = true;
   lastTapTime = millis();
@@ -87,7 +102,7 @@ function prepareTap(touches, container) {
     }
   }
 
-  if (!allNegative && !allPositive){
+  if (!allNegative && !allPositive) {
     preparedTapIncrements = [0, 0];
     attemptingSameSidePinch = false;
   } else {
@@ -109,9 +124,10 @@ function triggerTouchEvents() {
 
     // printout("PINCHED IN");
     //Initiate operation
-    if(towerPair.canPinchIn())  //check if there's at least one unit each side
+    if (towerPair.canPinchIn())  //check if there's at least one unit each side
       towerPair.initiatePinchIn();
 
+    // sendTouchDataToBackend(storedTouches.pinchIn);
   }
 
   if (pinchedOutThisCycle) {
@@ -122,6 +138,7 @@ function triggerTouchEvents() {
     //Initiate operation
     towerPair.initiatePinchOut();
 
+    // sendTouchDataToBackend(storedTouches.pinchOut);
   }
 
   if (swipedUpDownThisCycle) {
@@ -131,6 +148,9 @@ function triggerTouchEvents() {
     // printout("SWIPED TO FLIP");
     //Initiate operation
     towerPair.initiateFlip(); //NOTE THIS HAS TO BE REWRITTEN TO ACCOUNT FOR DIFFERENT SWIPING ACTIONS.
+
+    
+    // sendTouchDataToBackend(storedTouches.upDownSwipe);
   }
 
   if (swipedLeftRightThisCycle) {
@@ -145,6 +165,8 @@ function triggerTouchEvents() {
     if (currentSubtrahend != 0) {
       towerPair.initiateSubtract();
     }
+
+    // sendTouchDataToBackend(storedTouches.sideSwipe);
   }
 
   //After all checks are done if tap preparation is still ongoing AND enough time has passed, BOOM 
@@ -160,6 +182,8 @@ function triggerTouchEvents() {
 
     //Bomb defuses after exploding
     isPreparingToTap = false;
+    
+    // sendTouchDataToBackend(storedTouches.taps);
   }
 
 }
@@ -254,11 +278,11 @@ function computeSubtrahend() {
       let targetXY = [targets.negative[i].x, targets.negative[i].y];
 
       //Check if the dart is within the target using distance formula and circle interior relationship
-      if (sq(dartXY[0] - targetXY[0]) + sq(dartXY[1] - targetXY[1]) <=  sq(radius)) {
+      if (sq(dartXY[0] - targetXY[0]) + sq(dartXY[1] - targetXY[1]) <= sq(radius)) {
         //HIT!
-        
+
         // console.log("MUST SUBTRACT " + (i + 1));
-        return -1*(i + 1);
+        return -1 * (i + 1);
       }
     }
   }
@@ -267,12 +291,12 @@ function computeSubtrahend() {
 
 //--------------------- SCOREKEEPING/EXPRESSION RENDERING -----------------------------------------//
 
-function showDynamicExpression(x = width * 14 / 20, y = height/2 - 2*theBlockSize) {
+function showDynamicExpression(x = width * 14 / 20, y = height / 2 - 2 * theBlockSize) {
   stroke(150)
   strokeWeight(1)
   // noStroke()
   // textFont('Helvetica');
-  
+
   textFont(fancyFont)
   textSize(expressionTextSize);
   textAlign(LEFT, BOTTOM);
@@ -297,12 +321,12 @@ function renderDividingLine() {
   // line(0, height / 2, width, height / 2);
   rect(0, startY, width, dividerSize);
 }
-    
-function renderGrid(){
 
-  let numberOfGridLines = Math.ceil((height/2)/theBlockSize);
-  let numberFontSize = expressionTextSize/2;
-  let textX = width/2 - theBlockSize;
+function renderGrid() {
+
+  let numberOfGridLines = Math.ceil((height / 2) / theBlockSize);
+  let numberFontSize = expressionTextSize / 2;
+  let textX = towerPair.position[0] - theBlockSize;
 
   stroke(0);
   fill(0);
@@ -310,31 +334,31 @@ function renderGrid(){
   textSize(numberFontSize);
   textAlign(CENTER, CENTER);
 
-  for(i = 1; i <= numberOfGridLines; i++){
+  for (i = 1; i <= numberOfGridLines; i++) {
     //Draw grid lines on positive side of the dividing line
-    let positiveLineY = height/2 - i*theBlockSize;
+    let positiveLineY = height / 2 - i * theBlockSize;
     line(0, positiveLineY, width, positiveLineY);
     //Now write the number
     text(i, textX, positiveLineY);
-  
-    
+
+
     //Draw grid lines on negative side of the dividing line
-    let negativeLineY = height/2 + i*theBlockSize;
+    let negativeLineY = height / 2 + i * theBlockSize;
     line(0, negativeLineY, width, negativeLineY);
     //Now write the number
     text(-i, textX, negativeLineY);
   }
 
   //MARKING NUMBERS
-  
+
   // let textX = width/2 - theBlockSize;
 
   stroke(0);
   textSize(numberFontSize);
   textAlign(CENTER, CENTER);
-  
+
   //Mark the zero
-  text(0, textX, height/2);
+  text(0, textX, height / 2);
 
   // //Mark until currentPositiveUnits or currentNegativeUnits on each side
 
@@ -343,7 +367,7 @@ function renderGrid(){
   // }
 
   // for(i = 1; i <= towerPair.currentNegativeUnits; i++){
-    
+
   // }
 
 }
@@ -367,7 +391,7 @@ function preventDefaultTouchEvents() {
 function setupColors() {
   positiveTowerColor = color(255, 175, 204);
   negativeTowerColor = color(189, 224, 254);
-  
+
   newPositiveBlockFill = color(255, 175, 204);
   newNegativeBlockFill = color(189, 224, 254);
 
@@ -505,32 +529,86 @@ function touchStarted() {
 // ---------------BACKEND INTEGRATION-----------------------//
 
 
-function sendDataToBackend(action) {
-    const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
-  
+function sendActionDataToBackend(action) {
+  const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
+
   const environment = isLocal ? 'development' : 'production';
 
   if (!window.db || !window.collection || !window.addDoc) {
-      console.error("Firestore not initialized.");
-      return;
+    console.error("Firestore not initialized.");
+    return;
   }
 
-  window.addDoc(window.collection(window.db, "interactions"), {
-      event: action,
-      timestamp: new Date().toISOString(),
-      username: username,
-      currentPositiveUnits: towerPair.currentPositiveUnits,
-      currentNegativeUnits: towerPair.currentNegativeUnits,
-      environment: environment
+  window.addDoc(window.collection(window.db, "actions"), {
+    event: action,
+    timestamp: new Date().toISOString(),
+    username: username,
+    afterActionPositiveUnits: towerPair.currentPositiveUnits,
+    afterActionNegativeUnits: towerPair.currentNegativeUnits,
+    environment: environment,
+    schoolID: schoolID,
+    dayID: dayID,
+    currentProblem: currentProblemNumber
   }).then(() => {
-      console.log("Data logged successfully!");
+    console.log("Action data logged successfully!");
   }).catch(error => {
-      console.error("Error logging data:", error);
+    console.error("Error logging action data:", error);
   });
 }
 
 
-function resetUserData(){
+// function sendTouchDataToBackend(touches_) {
+//   const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
+
+//   const environment = isLocal ? 'development' : 'production';
+
+//   let touches = extractTouchPoints(touches_)
+
+//   if (!window.db || !window.collection || !window.addDoc) {
+//     console.error("Firestore not initialized.");
+//     return;
+//   }
+
+//   window.addDoc(window.collection(window.db, "touch"), {
+//     ...touches,
+//     timestampUTC: new Date().toISOString(),
+//     username: username,
+//     afterActionPositiveUnits: towerPair.currentPositiveUnits,
+//     afterActionNegativeUnits: towerPair.currentNegativeUnits,
+//     environment: environment
+//   }).then(() => {
+//     console.log("Touchata logged successfully!");
+//   }).catch(error => {
+//     console.error("Error logging touch data:", error);
+//   });
+// }
+
+
+
+function resetUserData() {
   // Add any code for resetting the user's data here
 
+}
+
+
+
+// --------------- RECORDING TOUCH DATA -----------------------//
+
+function extractTouchPoints(touchList) {
+  //Gives an array of Key-value pairs.
+  const points = [];
+  for (let i = 0; i < touchList.length; i++) {
+    points.push({
+      identifier: touchList[i].identifier,
+      clientX: touchList[i].clientX,
+      clientY: touchList[i].clientY,
+      screenX: touchList[i].screenX,
+      screenY: touchList[i].screenY,
+      radiusX: touchList[i].radiusX,
+      radiusY: touchList[i].radiusY,
+      rotationAngle: touchList[i].rotationAngle,
+      force: touchList[i].force
+    });
+  }
+  return points;
 }

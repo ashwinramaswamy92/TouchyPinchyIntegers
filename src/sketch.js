@@ -84,7 +84,7 @@ function preload() {
 
 function setup() {
   hasSetupStarted = true
-  
+
   //Using a container the same size as the canvas for hammer.js to detect touch events
   canvasContainer = document.getElementById('swipe-container');
   canvas = createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
@@ -94,7 +94,7 @@ function setup() {
 
 
   //anchor tower pair to center
-  towerPair.setPosition(width / 2, height / 2)
+  towerPair.setPosition(width * 2 / 5, height / 2)
 
   //setup touch funcctions
   // setupTouch();
@@ -109,6 +109,7 @@ function setup() {
   //While debugging/developing
   // setupOperatorButtons();
 
+  initializeProblemDisplay();
 
 }
 
@@ -121,14 +122,14 @@ function draw() {
 
 
   //Interaction
-  if(!registeringUser)  //Don't record touches when registration is ongoing
+  if (!registeringUser)  //Don't record touches when registration is ongoing
     triggerTouchEvents();
 
   //Drawing on each side
   towerPair.renderPositive();
   towerPair.renderNegative();
 
-  
+
   //To see tap and swipe coords (FOR DEBUGGING)
   // showTapAndSwipe();
 

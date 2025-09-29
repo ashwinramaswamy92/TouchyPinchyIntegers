@@ -52,6 +52,8 @@
     window.addDoc = addDoc;
   </script>
 
+
+
   <!-- DOM ELEMENTS -->
   <!-- Registration Overlay -->
   <div id="registrationOverlay" class="registration-overlay">
@@ -67,12 +69,31 @@
 
       <!-- Username Screen -->
       <div id="usernameScreen">
-        <h1 class="registration-title">Enter Student Name</h1>
-        <input type="text" id="usernameInput" class="username-input" placeholder="Your username..." maxlength="20">
+        <h1 class="registration-title">Enter Student Details</h1>
+        <p class="registration-prompt">Student Name:</p>
+        <input type="text" id="usernameInput" class="username-input" placeholder="Student name..." maxlength="20">
+        <p class="registration-prompt">School ID:</p>
+        <input type="text" id="schoolInput" class="username-input" placeholder="School ID..." maxlength="20">
+        <p class="registration-prompt">Day:</p>
+        <input type="text" id="dayInput" class="username-input" placeholder="Day #..." maxlength="20">
         <div id="errorMessage" class="error-message"></div>
         <button id="submitBtn" class="submit-btn">Start!</button>
       </div>
+
     </div>
+  </div>
+  
+  <!-- Problem Number Display -->
+  <div class="problem-display-container">
+    <div class="problem-text">Problem No.</div>
+    <div class="problem-controls">
+      <div class="problem-number-wrapper">
+        <button class="problem-arrow" id="problemIncrement">▲</button>
+        <div class="problem-number-main" id="problemNumber">1</div>
+        <button class="problem-arrow" id="problemDecrement">▼</button>
+      </div>
+    </div>
+    <button class="problem-reset-btn" id="problemReset">0</button>
   </div>
 
   <!-- Control Buttons -->
@@ -80,9 +101,9 @@
     <button id="resetBtn" class="control-btn reset-btn" title="Reset Game">🔄</button>
   </div>
 
-  <div class="control-buttons-bottom">
+  <!-- <div class="control-buttons-bottom">
     <button id="showRegisterBtn" class="control-btn register-btn" title="Change Name">👤</button>
-  </div>
+  </div> -->
 
   <!-- SWIPE CONTAINER -->
   <div id="swipe-container"></div>

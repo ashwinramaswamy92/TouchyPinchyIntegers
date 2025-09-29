@@ -25,6 +25,13 @@ const hitBoxAccuracy = 0.5;
 const swipeHitResolution = 60; //Number of points interpolated between start and end of swipe for which we check hitbox
 const pinchThreshold = 0.7;
 
+let storedTouches = {
+  taps: {},
+  sideSwipe: {},
+  upDownSwipe: {},
+  pinchIn: {},
+  pinchOut: {}
+} //Stores event.touches of the last such touch interaction at any given time. STILL TO BE INTEGRATED WITH BACKEND
 
 //----------------------------- GRAPHICS --------------------------------------//
 

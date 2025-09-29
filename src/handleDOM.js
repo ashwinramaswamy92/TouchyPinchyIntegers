@@ -2,6 +2,12 @@
 
 let registeringUser = true; // Flag to check if user is currently being registered. Game runs only when this is false.
 let username = "";   // optional username
+let schoolID = "";
+let dayID = "";
+
+// Problem Number Management
+let currentProblemNumber = 1;
+let isProcessing = false; // Flag to prevent multiple rapid clicks
 
 // DOM Elements
 const registrationOverlay = document.getElementById('registrationOverlay');
@@ -10,11 +16,21 @@ const usernameScreen = document.getElementById('usernameScreen');
 const passwordInput = document.getElementById('passwordInput');
 const passwordBtn = document.getElementById('passwordBtn');
 const usernameInput = document.getElementById('usernameInput');
+const schoolInput = document.getElementById('schoolInput');
+const dayInput = document.getElementById('dayInput');
 const submitBtn = document.getElementById('submitBtn');
 const guestBtn = document.getElementById('guestBtn');
 const resetBtn = document.getElementById('resetBtn');
-const showRegisterBtn = document.getElementById('showRegisterBtn');
+// const showRegisterBtn = document.getElementById('showRegisterBtn');
 const errorMessage = document.getElementById('errorMessage');
+
+
+
+const problemNumberElement = document.getElementById('problemNumber');
+const problemIncrementBtn = document.getElementById('problemIncrement');
+const problemDecrementBtn = document.getElementById('problemDecrement');
+const problemResetBtn = document.getElementById('problemReset');
+
 
 // Hardcoded password
 const INSTRUCTOR_PASSWORD = "RedHatPixy";
@@ -38,9 +54,9 @@ resetBtn.addEventListener('click', () => {
     }
 });
 
-showRegisterBtn.addEventListener('click', () => {
-    showPasswordScreen();
-});
+// showRegisterBtn.addEventListener('click', () => {
+//     showPasswordScreen();
+// });
 
 // Password submission handler
 function handlePasswordSubmit() {
@@ -59,24 +75,34 @@ function handlePasswordSubmit() {
 // Username submission handler
 function handleUsernameSubmit() {
     const enteredUsername = usernameInput.value.trim();
+    const enteredSchool = schoolInput.value.trim();
+    const enteredDay = dayInput.value.trim();
     
     if (enteredUsername === "") {
         errorMessage.textContent = "Username cannot be blank.";
         return;
     }
-    
+    let enteredDetails ={
+        username: enteredUsername,
+        schoolID: enteredSchool,
+        dayID: enteredDay
+    }
+
     errorMessage.textContent = "";
-    completeRegistration(enteredUsername);
+    completeRegistration(enteredDetails);
 }
 
 // Guest registration handler
 function handleGuestRegistration() {
-    completeRegistration("Guest");
+    completeRegistration({username: "Guest", schoolID: "N/A", dayID: "N/A"});
 }
 
 // Complete registration process
-function completeRegistration(userName) {
-    username = userName;
+function completeRegistration(details) {
+    username = details.username;
+    schoolID = details.schoolID;
+    dayID = details.dayID;
+
     registeringUser = false;
     registrationOverlay.style.display = 'none';
 
@@ -88,7 +114,7 @@ function completeRegistration(userName) {
         // Resetting the towerPair and data if a new registration is done after 
         towerPair.reset();
         resetUserData();
-        sendDataToBackend("User joined: " + username);
+        sendActionDataToBackend("User joined: " + username);
     }
 }
 
@@ -119,3 +145,88 @@ function initRegistration() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initRegistration);
+
+
+// Problem Number Display
+
+// Initialize problem number display
+function initializeProblemDisplay() {
+    updateProblemDisplay();
+    setupProblemEventListeners();
+}
+
+// Update the display with current problem number
+function updateProblemDisplay() {
+    // Ensure number stays within 2-digit limit (0-99)
+    if (currentProblemNumber > 99) currentProblemNumber = 99;
+    if (currentProblemNumber < 0) currentProblemNumber = 0;
+    
+    problemNumberElement.textContent = currentProblemNumber;
+}
+
+// Set up event listeners with click prevention
+function setupProblemEventListeners() {
+    // Increment button with click prevention
+    problemIncrementBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isProcessing) {
+            isProcessing = true;
+            currentProblemNumber = Math.min(currentProblemNumber + 1, 99);
+            updateProblemDisplay();
+            animateButtonPress(problemIncrementBtn);
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 150);
+        }
+    }, { passive: false });
+
+    // Decrement button with click prevention
+    problemDecrementBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isProcessing) {
+            isProcessing = true;
+            currentProblemNumber = Math.max(currentProblemNumber - 1, 0);
+            updateProblemDisplay();
+            animateButtonPress(problemDecrementBtn);
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 150);
+        }
+    }, { passive: false });
+
+    // Reset button with click prevention
+    problemResetBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isProcessing) {
+            isProcessing = true;
+            currentProblemNumber = 0;
+            updateProblemDisplay();
+            animateButtonPress(problemResetBtn);
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 150);
+        }
+    }, { passive: false });
+
+}
+
+
+// Button press animation
+function animateButtonPress(button) {
+    button.style.transform = 'translateY(2px)';
+    setTimeout(() => {
+        button.style.transform = '';
+    }, 150);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeProblemDisplay);
