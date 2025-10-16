@@ -143,7 +143,10 @@ body {
     bottom: 10px;
     left: 5px;
     z-index: 500;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;}
 
 .control-buttons-bottom {
     position: fixed;
@@ -328,9 +331,53 @@ body {
         0 1px 0 #cc8800,
         0 3px 6px rgba(0, 0, 0, 0.1);
 }
+/* Download Data Button */
+.download-btn {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.download-btn:active {
+    transform: translateY(3px);
+    box-shadow: 
+        0 1px 0 #2e7d32,
+        0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.download-btn.visible {
+    display: flex;
+}
+
+.download-btn::after {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    
+    .control-buttons {
+        bottom: 15px;
+        left: 3px;
+    }
+    .download-data-btn {
+        bottom: 15px;
+        right: 15px;
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+    }
     .problem-display-container {
         top: 5px;
         right: 5px;

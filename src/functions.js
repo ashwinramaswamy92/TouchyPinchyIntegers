@@ -149,7 +149,7 @@ function triggerTouchEvents() {
     //Initiate operation
     towerPair.initiateFlip(); //NOTE THIS HAS TO BE REWRITTEN TO ACCOUNT FOR DIFFERENT SWIPING ACTIONS.
 
-    
+
     // sendTouchDataToBackend(storedTouches.upDownSwipe);
   }
 
@@ -182,7 +182,7 @@ function triggerTouchEvents() {
 
     //Bomb defuses after exploding
     isPreparingToTap = false;
-    
+
     // sendTouchDataToBackend(storedTouches.taps);
   }
 
@@ -530,16 +530,10 @@ function touchStarted() {
 
 
 function sendActionDataToBackend(action) {
-  const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io"); // Don't call it local if its at the known deployment
-
+  const isLocal = !(window.location.hostname == "ashwinramaswamy92.github.io");
   const environment = isLocal ? 'development' : 'production';
 
-  if (!window.db || !window.collection || !window.addDoc) {
-    console.error("Firestore not initialized.");
-    return;
-  }
-
-  window.addDoc(window.collection(window.db, "actions"), {
+  const actionData = {
     event: action,
     timestamp: new Date().toISOString(),
     username: username,
@@ -549,11 +543,64 @@ function sendActionDataToBackend(action) {
     schoolID: schoolID,
     dayID: dayID,
     currentProblem: currentProblemNumber
-  }).then(() => {
-    console.log("Action data logged successfully!");
-  }).catch(error => {
-    console.error("Error logging action data:", error);
-  });
+  };
+
+
+
+  // Save to Firebase
+  window.addDoc(window.collection(window.db, "actions"), actionData)
+    .then(() => {
+      console.log("Action data logged to Firebase!");
+    })
+    .catch(error => {
+      console.error("Firebase error, storing locally:", error);
+      localActionData.push(actionData);
+      saveToLocalStorage();
+    });
+
+  // Also save locally  
+  console.log("Storing locally");
+  localActionData.push(actionData);
+  saveToLocalStorage();
+}
+
+
+// Save to browser's local storage as backup
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem('actionDataBackup', JSON.stringify(localActionData));
+  } catch (e) {
+    console.warn("Local storage full, keeping in memory only");
+  }
+}
+
+function downloadActionData() {
+  if (localActionData.length === 0) {
+    alert("No data collected yet!");
+    return;
+  }
+
+  // Create filename with user info and timestamp
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const filename = `touchgame_data_${username}_${schoolID}_${dayID}_${timestamp}.json`;
+
+  // Create JSON blob
+  const dataStr = JSON.stringify(localActionData, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+
+  // Create download link
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+
+  // Trigger download
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  console.log(`Downloaded ${localActionData.length} actions as ${filename}`);
 }
 
 

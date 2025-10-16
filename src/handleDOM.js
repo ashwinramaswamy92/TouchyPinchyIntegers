@@ -228,5 +228,20 @@ function animateButtonPress(button) {
     }, 150);
 }
 
+// Local Download
+
+const downloadDataBtn = document.getElementById('downloadDataBtn');
+
+// Event listener for download button
+downloadDataBtn.addEventListener('click', () => {
+        downloadActionData();
+});
+
+// Download before user navigates away or closes
+window.addEventListener('beforeunload', function (event) {
+        downloadActionData();
+});
+
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeProblemDisplay);

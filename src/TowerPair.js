@@ -197,7 +197,7 @@ class TowerPair {
       //Reset termination criteria
       currentlyAnimating.INCREMENTING_NEGATIVE = false;
       this.newNegativeBlockAlpha = 0;
-      sendActionDataToBackend("Added " + preparedTapIncrements[1]);
+      sendActionDataToBackend("Added " + -1*preparedTapIncrements[1]);
     }
   }
 

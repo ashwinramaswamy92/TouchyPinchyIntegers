@@ -86,3 +86,9 @@ const ref = window.ref;
 const firebasePush = window.firebasePush;
 
 
+
+
+//--------------- DUMPING LOCALLY ----------------------------------//
+
+let localActionData = [];
+let storeDataLocally = true;
