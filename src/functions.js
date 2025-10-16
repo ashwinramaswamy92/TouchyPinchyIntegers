@@ -550,16 +550,14 @@ function sendActionDataToBackend(action) {
   // Save to Firebase
   window.addDoc(window.collection(window.db, "actions"), actionData)
     .then(() => {
-      console.log("Action data logged to Firebase!");
+      console.log("Action logged to Firebase!");
     })
     .catch(error => {
-      console.error("Firebase error, storing locally:", error);
-      localActionData.push(actionData);
-      saveToLocalStorage();
+      console.error("Firebase error:", error);
     });
 
   // Also save locally  
-  console.log("Storing locally");
+  console.log("Action logged in local file");
   localActionData.push(actionData);
   saveToLocalStorage();
 }
